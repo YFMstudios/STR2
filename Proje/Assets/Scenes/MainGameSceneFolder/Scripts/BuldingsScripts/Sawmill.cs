@@ -6,6 +6,7 @@ public class Sawmill : Building
 {
     // Ekstra özellikler
     public static int timberProductionRate;
+    public static int goldProductionRateSawmill = 1;
     public static bool canIStartProduction = false;
 
     public static int buildLevel = 0;
@@ -17,20 +18,13 @@ public class Sawmill : Building
         buildingName = "Sawmill";
         buildingType = BuildingType.ResourceProduction;
         health = 100;
-        buildGoldCost = 1;
-        buildFoodCost = 1;
-        buildIronCost = 1;
-        buildStoneCost = 1;
-        buildTimberCost = 1;
-        buildTime = 10f;
+        buildGoldCost = 1200;
+        buildFoodCost = 900;
+        buildIronCost = 500;
+        buildStoneCost = 600;
+        buildTimberCost = 800;
+        buildTime = 60f;
         timberProductionRate = 5;
-        numberOfBuild = 0;
-    }
-
-
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
     }
 
     public override void UpdateCosts()
@@ -38,11 +32,21 @@ public class Sawmill : Building
         // Bina seviyesine göre maliyet güncelleme
         if (buildLevel == 1)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 2000;
+            buildFoodCost = 1600;
+            buildIronCost = 1000;
+            buildStoneCost = 1300;
+            buildTimberCost = 1600;
+            buildTime = 90f;
         }
         else if (buildLevel == 2)
         {
-            buildGoldCost = 2500;
+            buildGoldCost = 4000;
+            buildFoodCost = 3200;
+            buildIronCost = 2000;
+            buildStoneCost = 2600;
+            buildTimberCost = 3200;
+            buildTime = 120f;
         }
     }
 
@@ -51,14 +55,17 @@ public class Sawmill : Building
         if (buildLevel == 1)
         {
             timberProductionRate = 20;
+            goldProductionRateSawmill = 1;
         }
         else if (buildLevel == 2)
         {
             timberProductionRate = 25;
+            goldProductionRateSawmill = 2;
         }
         else if (buildLevel == 3)
         {
             timberProductionRate = 30;
+            goldProductionRateSawmill = 3;
         }
     }
 

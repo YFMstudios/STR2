@@ -119,7 +119,24 @@ public class RegionClickHandler : MonoBehaviour, IPointerClickHandler
                     break;
                 case "Arianopol":
                     imageComponent.sprite = ArianopolLinePNG;
-                    Debug.Log("Arianopol týklandý ve görsel deðiþtirildi.");
+
+                    FlagImage.sprite = Kingdom.Kingdoms[0].Flag;
+                    if (isYourKingdoms("Arianopol") == true)
+                    {
+                        WarIcon.enabled = false;
+                        ObservationImage.enabled = false;
+                    }
+                    else
+                    {
+                        WarIcon.enabled = true;
+                        ObservationImage.enabled = true;
+                        WarIcon.sprite = warSprite;
+                        ObservationImage.sprite = observationSprite;
+                    }
+                    owner.text = "Sahibi: " + findOwner("Arianopol");
+                    kingdom.text = "Krallýk:Arianopol";
+                    civilization.text = "Medeniyet:Ýnsan";
+                    numberOfSoldier.text = "Asker Sayýsý: " + Kingdom.Kingdoms[0].SoldierAmount.ToString();
                     break;
                 case "Dhamuron":
                     imageComponent.sprite = DhamuronLinePNG;

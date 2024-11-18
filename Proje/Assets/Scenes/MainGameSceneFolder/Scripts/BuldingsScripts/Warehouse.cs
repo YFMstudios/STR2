@@ -30,14 +30,6 @@ public class Warehouse : Building
         buildStoneCost = 1;
         buildTimberCost = 1;
         buildTime = 10f;
-        numberOfBuild = 0;
-    }
-
-
-    public override void CompleteConstruction()
-    {
-
-        numberOfBuild++;
     }
 
     public static void IncreaseCapacity()

@@ -15,13 +15,12 @@ public class Barracks : Building
         buildingName = "Barracks";
         buildingType = BuildingType.UnitProduction;
         health = 100;
-        buildGoldCost = 100;
-        buildFoodCost = 1;
-        buildIronCost = 1;
-        buildStoneCost = 1;
-        buildTimberCost = 1;
-        buildTime = 10f;
-        numberOfBuild = 0;
+        buildGoldCost = 2000;
+        buildFoodCost = 1200;
+        buildIronCost = 750;
+        buildStoneCost = 1000;
+        buildTimberCost = 1500;
+        buildTime = 90f;
     }
 
     public override void UpdateCosts()
@@ -29,16 +28,21 @@ public class Barracks : Building
         // Bina seviyesine göre maliyet güncelleme
         if (buildLevel == 1)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 3000;
+            buildFoodCost = 2000;
+            buildIronCost = 1500;
+            buildStoneCost = 1800;
+            buildTimberCost = 2200;
+            buildTime = 120f;
         }
         else if (buildLevel == 2)
         {
-            buildGoldCost = 2500;
+            buildGoldCost = 4500;
+            buildFoodCost = 3000;
+            buildIronCost = 2000;
+            buildStoneCost = 2500;
+            buildTimberCost = 3000;
+            buildTime = 180f;
         }
-    }
-
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
     }
 }

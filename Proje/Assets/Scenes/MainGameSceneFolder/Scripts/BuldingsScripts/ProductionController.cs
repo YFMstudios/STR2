@@ -9,6 +9,7 @@ public class ProductionController : MonoBehaviour
     void Start()
     {
         StartCoroutine(IncrementStoneAmount());
+        
         StartCoroutine(IncrementIronAmount());
         StartCoroutine(IncrementFoodAmount());
         StartCoroutine(IncrementTimberAmount());
@@ -30,7 +31,8 @@ public class ProductionController : MonoBehaviour
                 else
                 {
 
-                    Kingdom.myKingdom.StoneAmount += StonePit.stoneProductionRate; // myKingdom.StoneAmount deðerini 5 artýr
+                    Kingdom.myKingdom.StoneAmount += StonePit.stoneProductionRate;
+                    Kingdom.myKingdom.GoldAmount += StonePit.goldProductionRateStonePit;
                 }
             }
 
@@ -54,6 +56,7 @@ public class ProductionController : MonoBehaviour
                 {
 
                     Kingdom.myKingdom.IronAmount += Blacksmith.ironProductionRate; // myKingdom.StoneAmount deðerini 5 artýr
+                    Kingdom.myKingdom.GoldAmount += Blacksmith.goldProductionRateBlacksmith;
                 }
             }
 
@@ -77,6 +80,7 @@ public class ProductionController : MonoBehaviour
                 {
 
                     Kingdom.myKingdom.FoodAmount += Farm.foodProductionRate; // myKingdom.StoneAmount deðerini 5 artýr
+                    Kingdom.myKingdom.GoldAmount += Farm.goldProductionRateFarm;
                 }
             }
 
@@ -101,6 +105,7 @@ public class ProductionController : MonoBehaviour
                 {
 
                     Kingdom.myKingdom.WoodAmount += Sawmill.timberProductionRate; // myKingdom.StoneAmount deðerini 5 artýr
+                    Kingdom.myKingdom.GoldAmount += Sawmill.goldProductionRateSawmill;
                 }
 
             }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,60 +31,68 @@ public class ProgressBarController : MonoBehaviour
 
     public void CreateUnits()
     {
-        // Üretim sürelerini toplamak için deðiþkenler
-        float totalTime = 0;
-        totalUnitAmount = 0;
-        // Savaþçý slider'ýnýn deðeri varsa
-        if (slider.savasciSlider.value > 0)
+        if(Barracks.wasBarracksCreated == true)
         {
-            float savasciTime = slider.savasciSlider.value * savasciCreationTime;
-            totalTime += savasciTime;
-            totalUnitAmount += slider.savasciSlider.value;
-        }
-
-        // Okçu slider'ýnýn deðeri varsa
-        if (slider.okcuSlider.value > 0)
-        {
-            float okcuTime = slider.okcuSlider.value * okcuCreationTime;
-            totalTime += okcuTime;
-            totalUnitAmount += slider.okcuSlider.value;
-        }
-
-        // Mýzrakçý slider'ýnýn deðeri varsa
-        if (slider.mizrakciSlider.value > 0)
-        {
-            float mizrakciTime = slider.mizrakciSlider.value * mizrakciCreationTime;
-            totalTime += mizrakciTime;
-            totalUnitAmount += slider.mizrakciSlider.value;
-        }
-
-        // Tüm birimlerin toplam üretim süresi sýfýrdan büyükse progress bar'ý güncelle
-        if (totalTime > 0)
-        {
-            // Eðer progress bar doluyorsa ve aktifse
-            if (isProgressBarActive)
+            // Üretim sürelerini toplamak için deðiþkenler
+            float totalTime = 0;
+            totalUnitAmount = 0;
+            // Savaþçý slider'ýnýn deðeri varsa
+            if (slider.savasciSlider.value > 0)
             {
-                // Mevcut animasyonu durdur
-                LeanTween.cancel(progressBar);             
-                // Progress bar'ý sýfýrla
-                ResetProgressBar();
-                isProgressBarActive = false;
-                totalUnitAmount = 0;
+                float savasciTime = slider.savasciSlider.value * savasciCreationTime;
+                totalTime += savasciTime;
+                totalUnitAmount += slider.savasciSlider.value;
             }
-            else
+
+            // Okçu slider'ýnýn deðeri varsa
+            if (slider.okcuSlider.value > 0)
             {
-                // Progress bar'ý baþlat
-                isProgressBarActive = true; // Progress bar aktif
-                LeanTween.scaleX(progressBar, 1, totalTime)
-                    .setOnComplete(() =>
-                    {
-                        // Progress bar dolduðunda yapýlacak iþlemler
-                        OnProgressComplete();
-                        isProgressBarActive = false; // Progress bar artýk aktif deðil
-                        ResetProgressBar(); // Progress bar'ý sýfýrlamak için çaðýr
-                    });
+                float okcuTime = slider.okcuSlider.value * okcuCreationTime;
+                totalTime += okcuTime;
+                totalUnitAmount += slider.okcuSlider.value;
+            }
+
+            // Mýzrakçý slider'ýnýn deðeri varsa
+            if (slider.mizrakciSlider.value > 0)
+            {
+                float mizrakciTime = slider.mizrakciSlider.value * mizrakciCreationTime;
+                totalTime += mizrakciTime;
+                totalUnitAmount += slider.mizrakciSlider.value;
+            }
+
+            // Tüm birimlerin toplam üretim süresi sýfýrdan büyükse progress bar'ý güncelle
+            if (totalTime > 0)
+            {
+                // Eðer progress bar doluyorsa ve aktifse
+                if (isProgressBarActive)
+                {
+                    // Mevcut animasyonu durdur
+                    LeanTween.cancel(progressBar);
+                    // Progress bar'ý sýfýrla
+                    ResetProgressBar();
+                    isProgressBarActive = false;
+                    totalUnitAmount = 0;
+                }
+                else
+                {
+                    // Progress bar'ý baþlat
+                    isProgressBarActive = true; // Progress bar aktif
+                    LeanTween.scaleX(progressBar, 1, totalTime)
+                        .setOnComplete(() =>
+                        {
+                            // Progress bar dolduðunda yapýlacak iþlemler
+                            OnProgressComplete();
+                            isProgressBarActive = false; // Progress bar artýk aktif deðil
+                            ResetProgressBar(); // Progress bar'ý sýfýrlamak için çaðýr
+                        });
+                }
             }
         }
+        else
+        {
+            Debug.Log("Öncelikle bir kýþla üretmelisiniz.");
+        }
+        
     }
 
     void ResetProgressBar()
@@ -108,31 +117,40 @@ public class ProgressBarController : MonoBehaviour
 
     public void HealUnits()
     {
-        float totalHealTime = 0; // Toplam iyileþtirme süresi
-
-        // HastaneSlider deðerlerini kontrol et
-        if (hastaneSlider.savasciSlider.value > 0)
+        if(Hospital.wasHospitalCreated == true)
         {
-            totalHealTime += hastaneSlider.savasciSlider.value * savasciHealTime;
+            float totalHealTime = 0; // Toplam iyileþtirme süresi
+
+            // HastaneSlider deðerlerini kontrol et
+            if (hastaneSlider.savasciSlider.value > 0)
+            {
+                totalHealTime += hastaneSlider.savasciSlider.value * savasciHealTime;
+            }
+
+            if (hastaneSlider.okcuSlider.value > 0)
+            {
+                totalHealTime += hastaneSlider.okcuSlider.value * okcuHealTime;
+            }
+
+            if (hastaneSlider.mizrakciSlider.value > 0)
+            {
+                totalHealTime += hastaneSlider.mizrakciSlider.value * mizrakciHealTime;
+            }
+
+            // Toplam iyileþtirme süresi sýfýrdan büyükse progress bar'ý güncelle
+            if (totalHealTime > 0)
+            {
+                LeanTween.scaleX(healProgressBar, 1, totalHealTime).setOnComplete(ResetHealProgressBar);
+                Debug.Log("Toplam iyileþtirme süresi: " + totalHealTime);
+            }
         }
-
-        if (hastaneSlider.okcuSlider.value > 0)
+        else
         {
-            totalHealTime += hastaneSlider.okcuSlider.value * okcuHealTime;
-        }
-
-        if (hastaneSlider.mizrakciSlider.value > 0)
-        {
-            totalHealTime += hastaneSlider.mizrakciSlider.value * mizrakciHealTime;
-        }
-
-        // Toplam iyileþtirme süresi sýfýrdan büyükse progress bar'ý güncelle
-        if (totalHealTime > 0)
-        {
-            LeanTween.scaleX(healProgressBar, 1, totalHealTime).setOnComplete(ResetHealProgressBar);
-            Debug.Log("Toplam iyileþtirme süresi: " + totalHealTime);
+            Debug.Log("Öncelikle hastane inþa etmelisiniz.");
         }
     }
+    
+        
 
 
 }

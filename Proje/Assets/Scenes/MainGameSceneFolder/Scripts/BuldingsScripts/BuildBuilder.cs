@@ -291,7 +291,7 @@ public class BuildBuilder : MonoBehaviour
             barracks = gameObject.AddComponent<Barracks>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(barracks))
+            if (checkResources(barracks) && Sawmill.buildLevel >= 1 && Farm.buildLevel >= 2 && Blacksmith.buildLevel >= 1)
             {
                 // Kaynaklarý azaltýn
                 Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
@@ -309,33 +309,56 @@ public class BuildBuilder : MonoBehaviour
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
             }
         }
         else
         {
-            // Zaten bir kýþla varsa, yeni bir nesne yaratmayýn
-            if (checkResources(barracks))
+            if(Barracks.buildLevel == 1)
             {
-                // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
-
-                Barracks.buildLevel++;
-                barracks.UpdateCosts(); // Maliyetleri güncelle
-
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (Barracks.buildLevel == 3)
+                if (checkResources(barracks) && Sawmill.buildLevel >= 2 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 2)
                 {
-                    Destroy(buildButton.gameObject);
+                    // Kaynaklarý azaltýn
+                    Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
+
+                    Barracks.buildLevel++;
+                    Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                    barracks.UpdateCosts(); // Maliyetleri güncelle
+
+                }
+                else
+                {
+                    Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
                 }
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                if (Barracks.buildLevel == 2)
+                {
+                    if (checkResources(barracks) && Sawmill.buildLevel >= 3 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 3)
+                    {
+                        // Kaynaklarý azaltýn
+                        Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
+
+                        Barracks.buildLevel++;
+                        Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                        barracks.UpdateCosts(); // Maliyetleri güncelle                                     
+                        Destroy(buildButton.gameObject);
+
+                    }
+                    else
+                    {
+                        Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
+                    }
+                }
             }
         }
 }
@@ -406,12 +429,15 @@ public class BuildBuilder : MonoBehaviour
 
     public void BuildLab()
     {
-        if (Lab.wasLabCreated == false)
+        Lab lab = gameObject.GetComponent<Lab>();
+
+        if (Lab.wasLabCreated == false)//Daha önce üretilmediyse
         {
             
-            Lab lab = gameObject.AddComponent<Lab>();
+            lab = gameObject.AddComponent<Lab>();
+            TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(lab))
+            if (checkResources(lab) && Sawmill.buildLevel >= 2) // Kaynaklar yeterliyse, keresteci seviye 2 ise
             {
                 Lab.wasLabCreated = true;
 
@@ -422,41 +448,63 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.FoodAmount -= lab.buildFoodCost;
                 Lab.buildLevel++;
                 researchController.OpenResearchUnit(Lab.buildLevel);
+                lab.UpdateCosts();
+                buttonText.text = "Yükselt";
             }
 
             else
             {
-                Debug.Log("Yeterli Kaynak Bulunmamaktadýr.");
+                Debug.Log("Yeterli Kaynak Bulunmamaktadýr veya Keresteci 2.Seviye Deðil.");
             }
         }
-        else
+        else//Daha önce üretildi ise
         {
-            Debug.Log("Buraya da girdim");
-            if (Lab.wasLabCreated)
+            if(Lab.buildLevel == 1)//Lab 1.seviyeyse
             {
-                if (Lab.buildLevel < 4)
+                if (checkResources(lab) && ResearchButtonEvents.isResearched[3] && ResearchButtonEvents.isResearched[4])
+                //Kaynaklar yeterliyse 3.ve 4. araþtýrma yapýldýysa.
                 {
                     Lab.buildLevel++;
-                    if (ResearchButtonEvents.isResearched[3] || ResearchButtonEvents.isResearched[4] || Lab.buildLevel == 2)
-                    {
-                       
-                            Debug.Log("Level 2 Oldum");
-                            researchController.controlBuildLevelTwoResearches();
-                    
-                    }
-                    if (ResearchButtonEvents.isResearched[10] || ResearchButtonEvents.isResearched[11] || ResearchButtonEvents.isResearched[12] || Lab.buildLevel == 3)
-                    {
+                    Debug.Log("Bina Seviyesi : 2");
+                    researchController.controlBuildLevelTwoResearches();
+                    lab.UpdateCosts();
+                    //Araþtýrma hýzý arttýr.
 
-                        Debug.Log("Level 3 Oldum");
-                        researchController.controlBuildLevelThreeResearches();
-
-                    }
+                }
+                else
+                {
+                    Debug.Log("Lütfen kaynaklarýn yeterli olduðundan veya Dört ve Beþ numaralý araþtýrmalý tamamladýðýnýzdan emin olun!");
                 }
             }
+
+            else if(Lab.buildLevel ==2 )
+            {
+                if(checkResources(lab) && ResearchButtonEvents.isResearched[10] && ResearchButtonEvents.isResearched[11] && ResearchButtonEvents.isResearched[12] && Sawmill.buildLevel >= 3)
+                //Kaynak yeterliyse 11,12,13. araþtýrmalar yapýldýysa ve keresteci seviye 3'se
+                {
+                    Lab.buildLevel++;
+                    Debug.Log("Bina Seviyesi : 3");
+                    researchController.controlBuildLevelThreeResearches();
+                    //Araþtýrma hýzý arttýr.
+                    //Maliyet panelini kaldýr.
+                    Destroy(buildButton.gameObject);
+                }
+                else
+                {
+                    Debug.Log("Lütfen kaynaklarýn yeterli olduðundan, 11,12,13 numaralý araþtýrmalý tamamladýðýnýzdan ve Kerestecinizin 3.seviye olduðundan emin olun!");
+                }
+            }
+
+            else
+            {
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildLab fonksiyonunu kontrol ediniz.");
+            }
+                
         }
     }
+                      
 
-    public void BuildDefenseWorkshop()
+public void BuildDefenseWorkshop()
     {
         // Zaten var olan savunma atölyesi nesnesini kullanmak için kontrol edin
         DefenseWorkshop defenseWorkshop = GetComponent<DefenseWorkshop>();

@@ -55,17 +55,18 @@ public class Kingdom : MonoBehaviour
         Sprite lexionFlag = Resources.Load<Sprite>("lexionFlag");
         Sprite zephyrionFlag = Resources.Load<Sprite>("zephyrionFlag");
 
-        kingdoms[0] = new Kingdom("Arianopol", 0, 10123, 10000, 10300, 10000, 10000, 8465, 0, arianopolFlag);
-        kingdoms[1] = new Kingdom("Alfgard", 0, 2000, 10000, 10000, 10000, 10000, 10500, 0, alfgardFlag);
-        kingdoms[2] = new Kingdom("Akhadzria", 0, 10000, 17245, 12000, 10000, 10000, 10000, 0, akhadzriaFlag);
-        kingdoms[3] = new Kingdom("Dhamuron", 0, 10000, 13400, 10000, 10000, 10000, 10000, 0, dhamuronFlag);
-        kingdoms[4] = new Kingdom("Lexion", 0, 2000, 10000, 10600, 10000, 86400, 10000, 0, lexionFlag);
-        kingdoms[5] = new Kingdom("Zephyrion", 0, 10000, 10900, 10000, 10000, 10000, 10000, 0, zephyrionFlag);
+        kingdoms[0] = new Kingdom("Arianopol", 0, 7500, 3500, 7500, 5500, 3500, 0, 0, arianopolFlag);
+        kingdoms[1] = new Kingdom("Alfgard", 0, 75000, 35000, 75000, 55000, 35000, 0, 0, alfgardFlag);
+        kingdoms[2] = new Kingdom("Akhadzria", 0, 7500, 3500, 7500, 5500, 3500, 0, 0, akhadzriaFlag);
+        kingdoms[3] = new Kingdom("Dhamuron", 0, 7500, 3500, 7500, 5500, 3500, 0, 0, dhamuronFlag);
+        kingdoms[4] = new Kingdom("Lexion", 0, 75000, 35000, 75000, 55000, 35000, 0, 0, lexionFlag);
+        kingdoms[5] = new Kingdom("Zephyrion", 0, 7500, 3500, 7500, 5500, 3500, 0, 0, zephyrionFlag);
 
-        
+
+
     }
 
-    
+
 
 
     public void findOwner()

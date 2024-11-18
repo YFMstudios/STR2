@@ -27,7 +27,7 @@ public class Building : MonoBehaviour
     public int buildStoneCost;
     public int buildTimberCost;
     public float buildTime;
-    public int numberOfBuild;
+
     public bool wasBuildCreated;
 
     // Ýþlevler

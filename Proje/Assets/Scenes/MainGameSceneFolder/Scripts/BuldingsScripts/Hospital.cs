@@ -14,31 +14,35 @@ public class Hospital : Building
         buildingName = "Hospital";
         buildingType = BuildingType.Medical;
         health = 100;
-        buildGoldCost = 500;
-        buildFoodCost = 500;
-        buildIronCost = 500;
-        buildStoneCost = 500;
-        buildTimberCost = 500;
+        buildGoldCost = 2000;    // 1. Seviye baþlangýç maliyeti
+        buildFoodCost = 1000;
+        buildIronCost = 1000;
+        buildStoneCost = 1200;
+        buildTimberCost = 1500;
         buildTime = 10f;
-        numberOfBuild = 0;
     }
 
 
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
-    }
 
     public override void UpdateCosts()
     {
-        // Bina seviyesine göre maliyet güncelleme
-        if (buildLevel == 1)
+        if (buildLevel == 2)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 3500;    // 2. Seviye maliyet
+            buildFoodCost = 1800;
+            buildIronCost = 1500;
+            buildStoneCost = 2000;
+            buildTimberCost = 2200;
+            buildTime = 20f;
         }
-        else if (buildLevel == 2)
+        else if (buildLevel == 3)
         {
-            buildGoldCost = 2500;
+            buildGoldCost = 5000;    // 3. Seviye maliyet
+            buildFoodCost = 2500;
+            buildIronCost = 2000;
+            buildStoneCost = 3000;
+            buildTimberCost = 3500;
+            buildTime = 30f;
         }
     }
 

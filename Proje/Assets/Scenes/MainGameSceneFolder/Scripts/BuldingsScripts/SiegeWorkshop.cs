@@ -20,14 +20,8 @@ public class SiegeWorkshop : Building
         buildStoneCost = 1;
         buildTimberCost = 1;
         buildTime = 10f;
-        numberOfBuild = 0;
     }
 
-
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
-    }
     public override void UpdateCosts()
     {
         // Bina seviyesine göre maliyet güncelleme

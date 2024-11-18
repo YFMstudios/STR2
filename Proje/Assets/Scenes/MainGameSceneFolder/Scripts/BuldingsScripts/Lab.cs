@@ -14,31 +14,35 @@ public class Lab : Building
         buildingName = "Lab";
         buildingType = BuildingType.Research;
         health = 100;
-        buildGoldCost = 1;
-        buildFoodCost = 1;
-        buildIronCost = 1;
-        buildStoneCost = 1;
-        buildTimberCost = 1;
-        buildTime = 10f;
-        numberOfBuild = 0;
+        buildGoldCost = 3000;
+        buildFoodCost = 2500;
+        buildIronCost = 2500;
+        buildStoneCost = 3000;
+        buildTimberCost = 2000;
+        buildTime = 90f;
     }
 
 
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
-    }
 
     public override void UpdateCosts()
     {
-        // Bina seviyesine göre maliyet güncelleme
-        if (buildLevel == 1)
+        if (buildLevel == 2)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 5000;    // 2. Seviye maliyet
+            buildFoodCost = 4000;
+            buildIronCost = 4000;
+            buildStoneCost = 4500;
+            buildTimberCost = 3500;
+            buildTime = 120f;
         }
-        else if (buildLevel == 2)
+        else if (buildLevel == 3)
         {
-            buildGoldCost = 2500;
+            buildGoldCost = 7500;    // 3. Seviye maliyet
+            buildFoodCost = 6000;
+            buildIronCost = 6500;
+            buildStoneCost = 7000;
+            buildTimberCost = 5000;
+            buildTime = 150f;
         }
     }
 }

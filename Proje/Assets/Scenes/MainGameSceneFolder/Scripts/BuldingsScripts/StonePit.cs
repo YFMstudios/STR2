@@ -11,6 +11,7 @@ public class StonePit : Building
     // Ekstra özellikler
 
     public static int stoneProductionRate;
+    public static int goldProductionRateStonePit = 1;
     public static bool canIStartProduction = false;
 
     public static int buildLevel = 0;
@@ -23,36 +24,34 @@ public class StonePit : Building
         buildingName = "Stone Pit";
         buildingType = BuildingType.ResourceProduction;
         health = 100;
-        buildGoldCost = 50;
-        buildFoodCost = 1;
-        buildIronCost = 1;
-        buildStoneCost = 1;
-        buildTimberCost = 1;
-        buildTime = 10f;
+        buildGoldCost = 1800;
+        buildFoodCost = 1200;
+        buildIronCost = 500;
+        buildStoneCost = 600;
+        buildTimberCost = 900;
+        buildTime = 60f;
         stoneProductionRate = 3;
-        numberOfBuild = 0;
+        
     }
 
 
-
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
-    }
 
     public static void refreshStoneProductionRate()
     {
         if (buildLevel == 1)
         {
-            stoneProductionRate = 20;
+            stoneProductionRate = 3;
+            goldProductionRateStonePit = 1;
         }
         else if (buildLevel == 2)
         {
-            stoneProductionRate = 25;
+            stoneProductionRate = 5;
+            goldProductionRateStonePit = 2;
         }
         else if (buildLevel == 3)
         {
-            stoneProductionRate = 30;
+            stoneProductionRate = 12;
+            goldProductionRateStonePit = 3;
         }
     }
 
@@ -61,11 +60,21 @@ public class StonePit : Building
         // Bina seviyesine göre maliyet güncelleme
         if (buildLevel == 1)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 3200;
+            buildFoodCost = 1800;
+            buildIronCost = 1000;
+            buildStoneCost = 1300;
+            buildTimberCost = 1600;
+            buildTime = 90f;
         }
         else if (buildLevel == 2)
         {
-            buildGoldCost = 2500;
+            buildGoldCost = 6500;
+            buildFoodCost = 3600;
+            buildIronCost = 2000;
+            buildStoneCost = 2600;
+            buildTimberCost = 3200;
+            buildTime = 120f;
         }
     }
 }

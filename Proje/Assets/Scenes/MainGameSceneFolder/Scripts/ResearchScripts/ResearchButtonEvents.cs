@@ -36,197 +36,342 @@ public class ResearchButtonEvents : MonoBehaviour
 
     public void level2Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if(Lab.buildLevel >= 1 && isResearched[0]) 
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[1] = true;
-        researchItems[1].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[1].gameObject);
+            isResearched[1] = true;
+            researchItems[1].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[1].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az seviye 1 olduðundan ve Level 1 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+       
     }
 
     public void level3Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[2] = true;
-        researchItems[2].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[2].gameObject);
+        if (Lab.buildLevel >=1 && isResearched[0])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[2] = true;
+            researchItems[2].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[2].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az seviye 1 olduðundan ve Level 1 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
 
     public void level4Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 1 && isResearched[1])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[3] = true;
-        researchItems[3].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[3].gameObject);
-
+            isResearched[3] = true;
+            researchItems[3].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[3].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az seviye 1 olduðundan ve Level 2 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
     }
 
     public void level5Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[4] = true;
-        researchItems[4].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[4].gameObject);
+        if (Lab.buildLevel >= 1 && isResearched[2])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[4] = true;
+            researchItems[4].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[4].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az seviye 1 olduðundan ve Level 3 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+       
     }
 
     public void level6Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 2 && isResearched[3] && isResearched[4])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[5] = true;
-        researchItems[5].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[5].gameObject);
+            isResearched[5] = true;
+            researchItems[5].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[5].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 4,5 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
 
     public void level7Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[6] = true;
-        researchItems[6].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[6].gameObject);
+        if (Lab.buildLevel >= 2 && isResearched[3] && isResearched[4])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[6] = true;
+            researchItems[6].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[6].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 4,5 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
 
     public void level8Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if(Lab.buildLevel >= 2 && isResearched[3] && isResearched[4])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[7] = true;
-        researchItems[7].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[7].gameObject);
+            isResearched[7] = true;
+            researchItems[7].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[7].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 4,5 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
     public void level9Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 2 && isResearched[5] && isResearched[6])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[8] = true;
-        researchItems[8].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[8].gameObject);
+            isResearched[8] = true;
+            researchItems[8].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[8].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 6,7 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+
+        
     }
     public void level10Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 2 && isResearched[6] && isResearched[7])
+        {
 
-        isResearched[9] = true;
-        researchItems[9].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[9].gameObject);
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[9] = true;
+            researchItems[9].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[9].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 7,8  Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+
     }
     public void level11Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 2 && isResearched[8])
+        {
 
-        isResearched[10] = true;
-        researchItems[10].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[10].gameObject);
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[10] = true;
+            researchItems[10].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[10].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 9 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        } 
+
     }
     public void level12Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 2 && isResearched[8] && isResearched[9])
+        {
 
-        isResearched[11] = true;
-        researchItems[11].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[11].gameObject);
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[11] = true;
+            researchItems[11].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[11].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 9,10 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+
+        
     }
     public void level13Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 2 && isResearched[9])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[12] = true;
-        researchItems[12].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[12].gameObject);
+            isResearched[12] = true;
+            researchItems[12].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[12].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 2.seviye olduðundan ve Level 10 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
     public void level14Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 3 && isResearched[10] && isResearched[11])
+        {
 
-        isResearched[13] = true;
-        researchItems[13].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[13].gameObject);
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[13] = true;
+            researchItems[13].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[13].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 3.seviye olduðundan ve Level 11,12 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+
     }
     public void level15Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 3 && isResearched[11] && isResearched[12])
+        {
 
-        isResearched[14] = true;
-        researchItems[14].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[14].gameObject);
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[14] = true;
+            researchItems[14].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[14].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 3.seviye olduðundan ve Level 12,13 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
     public void level16Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 3 && isResearched[13])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[15] = true;
-        researchItems[15].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[15].gameObject);
+            isResearched[15] = true;
+            researchItems[15].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[15].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 3.seviye olduðundan ve Level 14 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
     public void level17Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 3 && isResearched[14])
+        {
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
 
-        isResearched[16] = true;
-        researchItems[16].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[16].gameObject);
+            isResearched[16] = true;
+            researchItems[16].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[16].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 3.seviye olduðundan ve Level 15 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
     public void level18Research()
     {
-        Kingdom.myKingdom.FoodAmount -= 1;
-        Kingdom.myKingdom.IronAmount -= 1;
-        Kingdom.myKingdom.WoodAmount -= 1;
-        Kingdom.myKingdom.StoneAmount -= 1;
+        if (Lab.buildLevel >= 3 && isResearched[15] && isResearched[16])
+        {
 
-        isResearched[17] = true;
-        researchItems[17].color = new Color(255f, 255f, 255f, 255f);
-        Destroy(button[17].gameObject);
+            Kingdom.myKingdom.FoodAmount -= 1;
+            Kingdom.myKingdom.IronAmount -= 1;
+            Kingdom.myKingdom.WoodAmount -= 1;
+            Kingdom.myKingdom.StoneAmount -= 1;
+
+            isResearched[17] = true;
+            researchItems[17].color = new Color(255f, 255f, 255f, 255f);
+            Destroy(button[17].gameObject);
+        }
+        else
+        {
+            Debug.Log("Laboratuvarýn en az 3.seviye olduðundan ve Level 16,17 Araþtýrmasýný yaptýðýnýzdan emin olun!");
+        }
+        
     }
 }
     

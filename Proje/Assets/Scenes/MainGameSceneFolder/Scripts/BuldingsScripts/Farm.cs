@@ -6,6 +6,7 @@ using UnityEngine;
 public class Farm : Building
 {
     public static int foodProductionRate;
+    public static int goldProductionRateFarm = 1;
     public static bool canIStartProduction = false;
     public static int buildLevel = 0;
     public static bool wasFarmCreated = false;
@@ -15,14 +16,13 @@ public class Farm : Building
         buildingName = "Farm";
         buildingType = BuildingType.ResourceProduction;
         health = 100;
-        buildGoldCost = 1;
-        buildFoodCost = 1;
-        buildIronCost = 1;
-        buildStoneCost = 1;
-        buildTimberCost = 1;
-        buildTime = 10f;
+        buildGoldCost = 1500;
+        buildFoodCost = 600;
+        buildIronCost = 250;
+        buildStoneCost = 400;
+        buildTimberCost = 800;
+        buildTime = 60f;
         foodProductionRate = 15;
-        numberOfBuild = 0;
     }
 
     public override void UpdateCosts()
@@ -30,16 +30,22 @@ public class Farm : Building
         // Bina seviyesine göre maliyet güncelleme
         if (buildLevel == 1)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 2200;
+            buildFoodCost = 1000;
+            buildIronCost = 400;
+            buildStoneCost = 700;
+            buildTimberCost = 1600;
+            buildTime = 90f;
         }
         else if (buildLevel == 2)
         {
-            buildGoldCost = 2500;
+            buildGoldCost = 3600;
+            buildFoodCost = 2000;
+            buildIronCost = 800;
+            buildStoneCost = 1200;
+            buildTimberCost = 3200;
+            buildTime = 120f;
         }
-    }
-    public override void CompleteConstruction()
-    {
-        numberOfBuild++;
     }
 
     public static void refreshFoodProductionRate()
@@ -47,14 +53,17 @@ public class Farm : Building
         if(buildLevel == 1)
         {
             foodProductionRate = 20;
+            goldProductionRateFarm = 1;
         }
         else if(buildLevel == 2)
         {
             foodProductionRate = 25;
+            goldProductionRateFarm = 2;
         }
         else if(buildLevel == 3) 
         {
             foodProductionRate = 30;
+            goldProductionRateFarm = 3;
         }
     }
 }

@@ -67,7 +67,6 @@ public class ResearchController : MonoBehaviour
 
     public void control9And10Levels()
     {
-        Debug.Log("control9And10Levels");
         if(ResearchButtonEvents.isResearched[5] == true)
         {
             Debug.Log("Level6 Araþtýrýldý");
@@ -80,13 +79,10 @@ public class ResearchController : MonoBehaviour
         {
             lockItems[8].enabled = false;
             Debug.Log("Seviye9 Açýldý");
-            //researchItems[8].color = new Color(255f, 255f, 255f, 255f);
         }
         if (ResearchButtonEvents.isResearched[6] == true && ResearchButtonEvents.isResearched[7] == true)
         {
             lockItems[9].enabled = false;
-            Debug.Log("controlScriptindeyim");
-            //researchItems[9].color = new Color(255f, 255f, 255f, 255f);
         }
     }
 
