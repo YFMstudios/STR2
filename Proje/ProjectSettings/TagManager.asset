@@ -12,6 +12,7 @@ TagManager:
   - AllyMinion
   - EnemyTurret
   - EnemyMinion
+  - AllyTurret
   layers:
   - Default
   - TransparentFX

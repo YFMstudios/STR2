@@ -4,86 +4,94 @@ using UnityEngine;
 public class ObjectiveStats : MonoBehaviour
 {
     [Header("Base Stats")]
-    public float health;             // Objektifin sağlık puanı
-    public float damage;             // Objektife verilecek hasar miktarı
+    public float health;
+    public float damage;
 
-    // Sağlık çubuğu değişkenleri
-    public float damageLerpDuration; // Hasar geçiş süresi
-    private float currentHealth;     // Mevcut sağlık
-    private float targetHealth;      // Hedeflenen sağlık
-    private Coroutine damageCoroutine; // Hasar geçiş işlemi
+    public float damageLerpDuration;
+    private float currentHealth;
+    private float targetHealth;
+    private Coroutine damageCoroutine;
 
-    private HealthUII healthUII;     // Sağlık arayüzü referansı
+    private float accumulatedDamage = 0; // Biriken hasar
+
+    private HealthUII healthUII;
 
     private void Awake()
     {
-        healthUII = GetComponent<HealthUII>(); // Sağlık arayüz bileşenini al
-        currentHealth = health;                // Mevcut sağlık başlangıçta hedef sağlığa eşitlenir
-        targetHealth = health;                 // Hedef sağlık başlangıçta başlangıç sağlığına eşitlenir
+        healthUII = GetComponent<HealthUII>();
+        currentHealth = health;
+        targetHealth = health;
 
-        healthUII.Start3DSlider(health);       // 3D sağlık çubuğunu başlatır
+        healthUII.Start3DSlider(health);
     }
 
-    // Hasar alma fonksiyonu
     public void TakeDamage(float damageAmount)
     {
-        targetHealth -= damageAmount; // Hedeflenen sağlık miktarını azalt
+        // Hasarı biriktir
+        accumulatedDamage += damageAmount;
 
-        if (targetHealth <= 0)        // Eğer sağlık sıfıra ulaşırsa objektif yok edilir
-        {
-            targetHealth = 0;          // Sağlık sıfıra düşerse sıfır yap
-            HandleDeath();            // Ölüm işlemlerini gerçekleştir
-        }
-        else if (damageCoroutine == null) // Hasar geçiş animasyonu yoksa başlat
+        // Eğer coroutine çalışmıyorsa başlat
+        if (damageCoroutine == null)
         {
             StartLerpHealth();
         }
     }
 
-    // Ölüm işlemlerini gerçekleştiren fonksiyon
     private void HandleDeath()
     {
-        if (gameObject.CompareTag("EnemyTurret")) // Eğer objektif bir düşman kule ise
+        if (gameObject.CompareTag("EnemyTurret"))
         {
-            Destroy(gameObject);   // Kuleyi yok et
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Diğer nesneleri yok et
+            Destroy(gameObject);
         }
     }
 
-    // Hasar geçişini başlatan fonksiyon
     private void StartLerpHealth()
     {
         if (damageCoroutine == null)
         {
-            damageCoroutine = StartCoroutine(LerpHealth()); // Hasar geçiş animasyonunu başlatır
+            damageCoroutine = StartCoroutine(LerpHealth());
         }
     }
 
-    // Sağlık geçişi animasyonu için coroutine
     private IEnumerator LerpHealth()
     {
-        float elapsedTime = 0;
-        float initialHealth = currentHealth;
-
-        while (elapsedTime < damageLerpDuration)
+        while (accumulatedDamage > 0) // Biriken hasar bitene kadar işlem yap
         {
-            currentHealth = Mathf.Lerp(initialHealth, targetHealth, elapsedTime / damageLerpDuration); // Sağlık geçişi
-            UpdateHealthUI(); // UI'yi günceller
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            float elapsedTime = 0;
+            float initialHealth = currentHealth;
+
+            // Hedef sağlık, biriken hasar kadar azalır
+            targetHealth -= accumulatedDamage;
+            accumulatedDamage = 0; // Biriken hasar sıfırlanır
+
+            if (targetHealth <= 0)
+            {
+                targetHealth = 0;
+                HandleDeath();
+                break;
+            }
+
+            while (elapsedTime < damageLerpDuration)
+            {
+                currentHealth = Mathf.Lerp(initialHealth, targetHealth, elapsedTime / damageLerpDuration);
+                UpdateHealthUI();
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            currentHealth = targetHealth;
+            UpdateHealthUI();
         }
 
-        currentHealth = targetHealth; // Sağlık geçişi tamamlandığında mevcut sağlık hedef sağlığa eşitlenir
-        UpdateHealthUI();              // UI'yi günceller
-        damageCoroutine = null;        // Coroutine sonlanır
+        damageCoroutine = null; // Coroutine tamamlanır
     }
 
-    // Sağlık arayüzünü günceller
     private void UpdateHealthUI()
     {
-        healthUII.Update3DSlider(currentHealth); // Sağlık arayüzünü günceller
+        healthUII.Update3DSlider(currentHealth);
     }
 }
