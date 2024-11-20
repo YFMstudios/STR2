@@ -9,6 +9,16 @@ public class ProgressBarController : MonoBehaviour
 {
     public GameObject progressBar;
     public GameObject healProgressBar;
+    public GameObject buildWareHouseBar;
+    public GameObject buildStonepitBar;
+    public GameObject buildSawmillBar;
+    public GameObject buildFarmBar;
+    public GameObject buildBlacksmithBar;
+    public GameObject buildLabBar;
+    public GameObject buildBarracksBar;
+    public GameObject buildHospitalBar;
+
+
     public SliderController slider;
     public HastaneSliderController hastaneSlider;
     public float savasciCreationTime = 1.5f;
@@ -20,6 +30,16 @@ public class ProgressBarController : MonoBehaviour
     public float mizrakciHealTime = 4.5f;
 
     private bool isProgressBarActive = false;
+
+
+    public WareHousePanelController wareHousePanelController;
+    public StonepitPanelController stonepitPanelController;
+    public SawmillPanelController sawmillPanelController;
+    public FarmPanelController farmPanelController;
+    public BlacksmithPanelController blacksmithPanelController;
+    public LabPanelController labPanelController;
+    public BarracksPanelController barracksPanelController;
+    public HospitalPanelController hospitalPanelController;
 
     public float time;
     public TextMeshProUGUI kalanZaman;
@@ -69,7 +89,7 @@ public class ProgressBarController : MonoBehaviour
                     // Mevcut animasyonu durdur
                     LeanTween.cancel(progressBar);
                     // Progress bar'ý sýfýrla
-                    ResetProgressBar();
+                    ResetProgressBar(progressBar);
                     isProgressBarActive = false;
                     totalUnitAmount = 0;
                 }
@@ -83,7 +103,7 @@ public class ProgressBarController : MonoBehaviour
                             // Progress bar dolduðunda yapýlacak iþlemler
                             OnProgressComplete();
                             isProgressBarActive = false; // Progress bar artýk aktif deðil
-                            ResetProgressBar(); // Progress bar'ý sýfýrlamak için çaðýr
+                            ResetProgressBar(progressBar); // Progress bar'ý sýfýrlamak için çaðýr
                         });
                 }
             }
@@ -95,9 +115,9 @@ public class ProgressBarController : MonoBehaviour
         
     }
 
-    void ResetProgressBar()
+    void ResetProgressBar(GameObject gameObject)
     {
-        progressBar.transform.localScale = new Vector3(0, progressBar.transform.localScale.y, progressBar.transform.localScale.z);
+        gameObject.transform.localScale = new Vector3(0, gameObject.transform.localScale.y, gameObject.transform.localScale.z);
         // Ýsterseniz progress bar'ý yeniden kullanmak için baþka iþlemler de yapabilirsiniz
     }
     void OnProgressComplete()
@@ -109,11 +129,6 @@ public class ProgressBarController : MonoBehaviour
         Debug.Log("Krallýðýnýzýn asker sayýsý:" + Kingdom.myKingdom.SoldierAmount);
     }
 
-    void ResetHealProgressBar()
-    {
-        healProgressBar.transform.localScale = new Vector3(0, healProgressBar.transform.localScale.y, healProgressBar.transform.localScale.z);
-        // Ýsterseniz progress bar'ý yeniden kullanmak için baþka iþlemler de yapabilirsiniz
-    }
 
     public void HealUnits()
     {
@@ -140,7 +155,7 @@ public class ProgressBarController : MonoBehaviour
             // Toplam iyileþtirme süresi sýfýrdan büyükse progress bar'ý güncelle
             if (totalHealTime > 0)
             {
-                LeanTween.scaleX(healProgressBar, 1, totalHealTime).setOnComplete(ResetHealProgressBar);
+                LeanTween.scaleX(healProgressBar, 1, totalHealTime).setOnComplete(() => ResetProgressBar(healProgressBar));
                 Debug.Log("Toplam iyileþtirme süresi: " + totalHealTime);
             }
         }
@@ -149,8 +164,242 @@ public class ProgressBarController : MonoBehaviour
             Debug.Log("Öncelikle hastane inþa etmelisiniz.");
         }
     }
-    
-        
 
 
+    public IEnumerator WarehouseIsFinished(Warehouse warehouse, System.Action<bool> onCompletion)
+    {
+        wareHousePanelController.cancelWarehouseButton.gameObject.SetActive(true);
+        wareHousePanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+       
+        // LeanTween animasyonu baþlat
+
+        LeanTween.scaleX(buildWareHouseBar, 1, warehouse.buildTime).setOnComplete(() => ResetProgressBar(buildWareHouseBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < warehouse.buildTime)
+        {
+            if (wareHousePanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildWareHouseBar); // Animasyonu iptal et
+                ResetProgressBar(buildWareHouseBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        wareHousePanelController.cancelWarehouseButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
+
+    public IEnumerator StonePitIsFinished(StonePit stonepit, System.Action<bool> onCompletion)
+    {
+        stonepitPanelController.cancelStonepitButton.gameObject.SetActive(true);
+        stonepitPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+
+        LeanTween.scaleX(buildStonepitBar, 1, stonepit.buildTime).setOnComplete(() => ResetProgressBar(buildStonepitBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < stonepit.buildTime)
+        {
+            if (stonepitPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildStonepitBar); // Animasyonu iptal et
+                ResetProgressBar(buildStonepitBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        stonepitPanelController.cancelStonepitButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+
+    }
+
+    public IEnumerator SawmillIsFinished(Sawmill sawmill, System.Action<bool> onCompletion)
+    {
+        sawmillPanelController.cancelSawmillButton.gameObject.SetActive(true);
+        sawmillPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+
+        LeanTween.scaleX(buildSawmillBar, 1, sawmill.buildTime).setOnComplete(() => ResetProgressBar(buildSawmillBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < sawmill.buildTime)
+        {
+            if (sawmillPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildSawmillBar); // Animasyonu iptal et
+                ResetProgressBar(buildSawmillBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        sawmillPanelController.cancelSawmillButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
+
+    public IEnumerator FarmIsFinished(Farm farm, System.Action<bool> onCompletion)
+    {
+        farmPanelController.cancelFarmButton.gameObject.SetActive(true);
+        farmPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+        LeanTween.scaleX(buildFarmBar, 1, farm.buildTime).setOnComplete(() => ResetProgressBar(buildFarmBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < farm.buildTime)
+        {
+            if (farmPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildFarmBar); // Animasyonu iptal et
+                ResetProgressBar(buildFarmBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        farmPanelController.cancelFarmButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
+
+
+    public IEnumerator BlacksmithIsFinished(Blacksmith blacksmith, System.Action<bool> onCompletion)
+    {
+        blacksmithPanelController.cancelBlacksmithButton.gameObject.SetActive(true);
+        blacksmithPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+        LeanTween.scaleX(buildBlacksmithBar, 1, blacksmith.buildTime).setOnComplete(() => ResetProgressBar(buildBlacksmithBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < blacksmith.buildTime)
+        {
+            if (blacksmithPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildBlacksmithBar); // Animasyonu iptal et
+                ResetProgressBar(buildBlacksmithBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        blacksmithPanelController.cancelBlacksmithButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
+
+    public IEnumerator LabIsFinished(Lab lab, System.Action<bool> onCompletion)
+    {
+        labPanelController.cancelLabButton.gameObject.SetActive(true);
+        labPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+        LeanTween.scaleX(buildLabBar, 1, lab.buildTime).setOnComplete(() => ResetProgressBar(buildLabBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < lab.buildTime)
+        {
+            if (labPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildLabBar); // Animasyonu iptal et
+                ResetProgressBar(buildLabBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        labPanelController.cancelLabButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
+
+    public IEnumerator BarracksIsFinished(Barracks barracks, System.Action<bool> onCompletion)
+    {
+        barracksPanelController.cancelBarracksButton.gameObject.SetActive(true);
+        barracksPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+        LeanTween.scaleX(buildBarracksBar, 1, barracks.buildTime).setOnComplete(() => ResetProgressBar(buildBarracksBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < barracks.buildTime)
+        {
+            if (barracksPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildBarracksBar); // Animasyonu iptal et
+                ResetProgressBar(buildBarracksBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        barracksPanelController.cancelBarracksButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
+
+    public IEnumerator HospitalIsFinished(Hospital hospital, System.Action<bool> onCompletion)
+    {
+        hospitalPanelController.cancelHospitalButton.gameObject.SetActive(true);
+        hospitalPanelController.isBuildCanceled = false; // Ýptal durumu sýfýrla
+
+        // LeanTween animasyonu baþlat
+        LeanTween.scaleX(buildHospitalBar, 1, hospital.buildTime).setOnComplete(() => ResetProgressBar(buildHospitalBar));
+
+        float elapsedTime = 0f; // Geçen zamaný takip et
+
+        while (elapsedTime < hospital.buildTime)
+        {
+            if (hospitalPanelController.isBuildCanceled) // Eðer iptal edilirse
+            {
+                LeanTween.cancel(buildHospitalBar); // Animasyonu iptal et
+                ResetProgressBar(buildHospitalBar); // ProgressBar'ý sýfýrla
+                onCompletion(false); // Baþarýsýzlýk durumunu bildir
+                yield break; // Coroutine sonlandýr
+            }
+
+            elapsedTime += Time.deltaTime; // Geçen süreyi artýr
+            yield return null; // Bir sonraki kareye kadar bekle
+        }
+
+        // Ýptal edilmeden tamamlandýysa
+        hospitalPanelController.cancelHospitalButton.gameObject.SetActive(false);
+        onCompletion(true); // Tamamlandýðýnda baþarýlý olarak bildir
+    }
 }

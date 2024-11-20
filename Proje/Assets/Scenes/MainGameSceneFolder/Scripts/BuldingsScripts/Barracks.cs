@@ -20,7 +20,7 @@ public class Barracks : Building
         buildIronCost = 750;
         buildStoneCost = 1000;
         buildTimberCost = 1500;
-        buildTime = 90f;
+        buildTime = 1f;
     }
 
     public override void UpdateCosts()
@@ -33,7 +33,7 @@ public class Barracks : Building
             buildIronCost = 1500;
             buildStoneCost = 1800;
             buildTimberCost = 2200;
-            buildTime = 120f;
+            buildTime = 1f;
         }
         else if (buildLevel == 2)
         {
@@ -42,7 +42,7 @@ public class Barracks : Building
             buildIronCost = 2000;
             buildStoneCost = 2500;
             buildTimberCost = 3000;
-            buildTime = 180f;
+            buildTime = 1f;
         }
     }
 }

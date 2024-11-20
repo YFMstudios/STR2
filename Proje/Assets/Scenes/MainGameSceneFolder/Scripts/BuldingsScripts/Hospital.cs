@@ -19,7 +19,7 @@ public class Hospital : Building
         buildIronCost = 1000;
         buildStoneCost = 1200;
         buildTimberCost = 1500;
-        buildTime = 10f;
+        buildTime = 1f;
     }
 
 
@@ -33,7 +33,7 @@ public class Hospital : Building
             buildIronCost = 1500;
             buildStoneCost = 2000;
             buildTimberCost = 2200;
-            buildTime = 20f;
+            buildTime = 2f;
         }
         else if (buildLevel == 3)
         {
@@ -42,7 +42,7 @@ public class Hospital : Building
             buildIronCost = 2000;
             buildStoneCost = 3000;
             buildTimberCost = 3500;
-            buildTime = 30f;
+            buildTime = 3f;
         }
     }
 

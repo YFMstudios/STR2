@@ -23,7 +23,7 @@ public class Sawmill : Building
         buildIronCost = 500;
         buildStoneCost = 600;
         buildTimberCost = 800;
-        buildTime = 60f;
+        buildTime = 1f;
         timberProductionRate = 5;
     }
 
@@ -37,7 +37,7 @@ public class Sawmill : Building
             buildIronCost = 1000;
             buildStoneCost = 1300;
             buildTimberCost = 1600;
-            buildTime = 90f;
+            buildTime = 2f;
         }
         else if (buildLevel == 2)
         {
@@ -46,7 +46,7 @@ public class Sawmill : Building
             buildIronCost = 2000;
             buildStoneCost = 2600;
             buildTimberCost = 3200;
-            buildTime = 120f;
+            buildTime = 3f;
         }
     }
 

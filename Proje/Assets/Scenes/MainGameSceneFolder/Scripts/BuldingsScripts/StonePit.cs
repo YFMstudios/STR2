@@ -29,7 +29,7 @@ public class StonePit : Building
         buildIronCost = 500;
         buildStoneCost = 600;
         buildTimberCost = 900;
-        buildTime = 60f;
+        buildTime = 2f;
         stoneProductionRate = 3;
         
     }
@@ -65,7 +65,7 @@ public class StonePit : Building
             buildIronCost = 1000;
             buildStoneCost = 1300;
             buildTimberCost = 1600;
-            buildTime = 90f;
+            buildTime = 5f;
         }
         else if (buildLevel == 2)
         {
@@ -74,7 +74,7 @@ public class StonePit : Building
             buildIronCost = 2000;
             buildStoneCost = 2600;
             buildTimberCost = 3200;
-            buildTime = 120f;
+            buildTime = 7f;
         }
     }
 }

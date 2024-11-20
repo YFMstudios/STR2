@@ -19,7 +19,7 @@ public class Lab : Building
         buildIronCost = 2500;
         buildStoneCost = 3000;
         buildTimberCost = 2000;
-        buildTime = 90f;
+        buildTime = 1f;
     }
 
 
@@ -33,7 +33,7 @@ public class Lab : Building
             buildIronCost = 4000;
             buildStoneCost = 4500;
             buildTimberCost = 3500;
-            buildTime = 120f;
+            buildTime = 1f;
         }
         else if (buildLevel == 3)
         {
@@ -42,7 +42,7 @@ public class Lab : Building
             buildIronCost = 6500;
             buildStoneCost = 7000;
             buildTimberCost = 5000;
-            buildTime = 150f;
+            buildTime = 1f;
         }
     }
 }

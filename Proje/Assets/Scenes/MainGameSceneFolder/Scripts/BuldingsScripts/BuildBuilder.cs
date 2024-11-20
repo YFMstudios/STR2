@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,17 @@ public class BuildBuilder : MonoBehaviour
     public ResearchController researchController;
     public Button buildButton;
     private Text buttonText;
+    public ProgressBarController progressBarController;
+
+    public WareHousePanelController wareHousePanelController;
+    public StonepitPanelController stonepitPanelController;
+    public SawmillPanelController sawmillPanelController;
+    public FarmPanelController farmPanelController;
+    public BlacksmithPanelController blacksmithPanelController;
+    public LabPanelController labPanelController;
+    public BarracksPanelController barracksPanelController;
+    public HospitalPanelController hospitalPanelController;
+
     public static bool checkResources(Building building) // Artýk Building türü kabul ediliyor
     {
         // Güncel maliyetleri kontrol edin
@@ -48,14 +60,34 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.IronAmount -= stonePit.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= stonePit.buildFoodCost;
 
-                StonePit.wasStonePitCreated = true;
-                StonePit.canIStartProduction = true;
-                StonePit.buildLevel = 1;
-                StonePit.refreshStoneProductionRate();
-                stonePit.UpdateCosts(); // Maliyetleri güncelle
+                buildButton.enabled = false;
 
-                Debug.Log("Bina Seviyesi : " + StonePit.buildLevel);
-                buttonText.text = "Yükselt";
+                StartCoroutine(progressBarController.StonePitIsFinished(stonePit, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        StonePit.wasStonePitCreated = true;
+                        StonePit.canIStartProduction = true;
+                        StonePit.buildLevel = 1;
+                        StonePit.refreshStoneProductionRate();
+                        stonePit.UpdateCosts(); // Maliyetleri güncelle
+
+                        Debug.Log("Bina Seviyesi : " + StonePit.buildLevel);
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        stonepitPanelController.refreshStonePit();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += stonePit.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += stonePit.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += stonePit.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += stonePit.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += stonePit.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
             }
             else
             {
@@ -64,29 +96,97 @@ public class BuildBuilder : MonoBehaviour
         }
         else
         {
+
             // Zaten bir taþ ocaðý varsa, yeni bir nesne yaratmayýn
-            if (checkResources(stonePit))
+            if (StonePit.buildLevel == 1)
             {
-                // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= stonePit.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= stonePit.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= stonePit.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= stonePit.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= stonePit.buildFoodCost;
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-                StonePit.buildLevel++;
-                StonePit.refreshStoneProductionRate(); // Üretim miktarýný güncelliyoruz.
-                stonePit.UpdateCosts(); // Maliyetleri güncelle
-
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (StonePit.buildLevel == 3)
+                if (checkResources(stonePit))
                 {
-                    Destroy(buildButton.gameObject);
+                    // Kaynaklarý azaltýn
+                    Kingdom.myKingdom.GoldAmount -= stonePit.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= stonePit.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= stonePit.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= stonePit.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= stonePit.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.StonePitIsFinished(stonePit, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            StonePit.buildLevel++;
+                            StonePit.refreshStoneProductionRate(); // Üretim miktarýný güncelliyoruz.
+                            stonePit.UpdateCosts(); // Maliyetleri güncelle
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            stonepitPanelController.refreshStonePit();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += stonePit.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += stonePit.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += stonePit.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += stonePit.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += stonePit.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
                 }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                }
+            }
+
+            else if (StonePit.buildLevel == 2)
+            {
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+
+                if (checkResources(stonePit))
+                {
+
+                    Kingdom.myKingdom.GoldAmount -= stonePit.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= stonePit.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= stonePit.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= stonePit.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= stonePit.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.StonePitIsFinished(stonePit, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            StonePit.buildLevel++;
+                            StonePit.refreshStoneProductionRate(); // Üretim miktarýný güncelliyoruz.                  
+                            stonepitPanelController.refreshStonePit();
+                            Destroy(buildButton.gameObject);
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += stonePit.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += stonePit.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += stonePit.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += stonePit.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += stonePit.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
+                }
+
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildStonePit fonksiyonunu kontrol ediniz.");
             }
         }
 
@@ -111,14 +211,34 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.IronAmount -= blacksmith.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= blacksmith.buildFoodCost;
 
-                Blacksmith.wasBlacksmithCreated = true;
-                Blacksmith.canIStartProduction = true;
-                Blacksmith.buildLevel = 1;
-                Blacksmith.refreshIronProductionRate();
-                blacksmith.UpdateCosts(); // Maliyetleri güncelle
+                buildButton.enabled = false;
 
-                Debug.Log("Bina Seviyesi : " + Blacksmith.buildLevel);
-                buttonText.text = "Yükselt";
+                StartCoroutine(progressBarController.BlacksmithIsFinished(blacksmith, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        Blacksmith.wasBlacksmithCreated = true;
+                        Blacksmith.canIStartProduction = true;
+                        Blacksmith.buildLevel = 1;
+                        Blacksmith.refreshIronProductionRate();
+                        blacksmith.UpdateCosts(); // Maliyetleri güncelle
+
+                        Debug.Log("Bina Seviyesi : " + Blacksmith.buildLevel);
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        blacksmithPanelController.refreshBlacksmith();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += blacksmith.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += blacksmith.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += blacksmith.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += blacksmith.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += blacksmith.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
             }
             else
             {
@@ -128,36 +248,101 @@ public class BuildBuilder : MonoBehaviour
         else
         {
             // Zaten bir demirci varsa, yeni bir nesne yaratmayýn
-            if (checkResources(blacksmith))
+            if (Blacksmith.buildLevel == 1)
             {
-                // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= blacksmith.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= blacksmith.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= blacksmith.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= blacksmith.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= blacksmith.buildFoodCost;
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-                Blacksmith.buildLevel++;
-                Blacksmith.refreshIronProductionRate(); // Üretim miktarýný güncelliyoruz.
-                blacksmith.UpdateCosts(); // Maliyetleri güncelle
-
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (Blacksmith.buildLevel == 3)
+                if (checkResources(blacksmith))
                 {
-                    Destroy(buildButton.gameObject);
+                    // Kaynaklarý azaltýn
+                    Kingdom.myKingdom.GoldAmount -= blacksmith.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= blacksmith.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= blacksmith.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= blacksmith.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= blacksmith.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.BlacksmithIsFinished(blacksmith, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Blacksmith.buildLevel++;
+                            Blacksmith.refreshIronProductionRate(); // Üretim miktarýný güncelliyoruz.
+                            blacksmith.UpdateCosts(); // Maliyetleri güncelle
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            blacksmithPanelController.refreshBlacksmith();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += blacksmith.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += blacksmith.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += blacksmith.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += blacksmith.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += blacksmith.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
+                }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                }
+            }
+
+            else if (Blacksmith.buildLevel == 2)
+            {
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+
+                if (checkResources(blacksmith))
+                {
+                    Kingdom.myKingdom.GoldAmount -= blacksmith.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= blacksmith.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= blacksmith.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= blacksmith.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= blacksmith.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.BlacksmithIsFinished(blacksmith, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Blacksmith.buildLevel++;
+                            Blacksmith.refreshIronProductionRate(); // Üretim miktarýný güncelliyoruz.                   
+                            blacksmithPanelController.refreshBlacksmith();
+                            Destroy(buildButton.gameObject);
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += blacksmith.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += blacksmith.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += blacksmith.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += blacksmith.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += blacksmith.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
                 }
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki BuildBlacksmith fonksiyonunu kontrol ediniz.");
             }
         }
-
     }
+
 
     public void BuildSawmill()
     {
-        // Zaten var olan kereste fabrikasý nesnesini kullanmak için kontrol edin
+        // Zaten var olan kereste ocaðý nesnesini kullanmak için kontrol edin
         Sawmill sawmill = GetComponent<Sawmill>();
 
         if (!Sawmill.wasSawmillCreated)
@@ -174,14 +359,34 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.IronAmount -= sawmill.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= sawmill.buildFoodCost;
 
-                Sawmill.wasSawmillCreated = true;
-                Sawmill.canIStartProduction = true;
-                Sawmill.buildLevel = 1;
-                Sawmill.refreshTimberProductionRate();
-                sawmill.UpdateCosts(); // Maliyetleri güncelle
+                buildButton.enabled = false;
 
-                Debug.Log("Bina Seviyesi : " + Sawmill.buildLevel);
-                buttonText.text = "Yükselt";
+                StartCoroutine(progressBarController.SawmillIsFinished(sawmill, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        Sawmill.wasSawmillCreated = true;
+                        Sawmill.canIStartProduction = true;
+                        Sawmill.buildLevel = 1;
+                        Sawmill.refreshTimberProductionRate();
+                        sawmill.UpdateCosts(); // Maliyetleri güncelle
+
+                        Debug.Log("Bina Seviyesi : " + Sawmill.buildLevel);
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        sawmillPanelController.refreshSawmill();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += sawmill.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += sawmill.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += sawmill.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += sawmill.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += sawmill.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
             }
             else
             {
@@ -190,33 +395,99 @@ public class BuildBuilder : MonoBehaviour
         }
         else
         {
-            // Zaten bir kereste fabrikasý varsa, yeni bir nesne yaratmayýn
-            if (checkResources(sawmill))
+            // Zaten bir kereste ocaðý varsa, yeni bir nesne yaratmayýn
+            if (Sawmill.buildLevel == 1)
             {
-                // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= sawmill.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= sawmill.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= sawmill.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= sawmill.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= sawmill.buildFoodCost;
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-                Sawmill.buildLevel++;
-                Sawmill.refreshTimberProductionRate(); // Üretim miktarýný güncelliyoruz.
-                sawmill.UpdateCosts(); // Maliyetleri güncelle
-
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (Sawmill.buildLevel == 3)
+                if (checkResources(sawmill))
                 {
-                    Destroy(buildButton.gameObject);
+                    // Kaynaklarý azaltýn
+                    Kingdom.myKingdom.GoldAmount -= sawmill.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= sawmill.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= sawmill.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= sawmill.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= sawmill.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.SawmillIsFinished(sawmill, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Sawmill.buildLevel++;
+                            Sawmill.refreshTimberProductionRate(); // Üretim miktarýný güncelliyoruz.
+                            sawmill.UpdateCosts(); // Maliyetleri güncelle
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            sawmillPanelController.refreshSawmill();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += sawmill.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += sawmill.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += sawmill.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += sawmill.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += sawmill.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
+                }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                }
+            }
+
+            else if (Sawmill.buildLevel == 2)
+            {
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+
+                if (checkResources(sawmill))
+                {
+
+                    Kingdom.myKingdom.GoldAmount -= sawmill.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= sawmill.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= sawmill.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= sawmill.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= sawmill.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.SawmillIsFinished(sawmill, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Sawmill.buildLevel++;
+                            Sawmill.refreshTimberProductionRate(); // Üretim miktarýný güncelliyoruz.                  
+                            sawmillPanelController.refreshSawmill();
+                            Destroy(buildButton.gameObject);
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += sawmill.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += sawmill.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += sawmill.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += sawmill.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += sawmill.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
                 }
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildSawmill fonksiyonunu kontrol ediniz.");
             }
         }
-
     }
+
 
     public void BuildFarm()
     {
@@ -237,14 +508,34 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.IronAmount -= farm.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= farm.buildFoodCost;
 
-                Farm.wasFarmCreated = true;
-                Farm.canIStartProduction = true;
-                Farm.buildLevel = 1;
-                Farm.refreshFoodProductionRate();
-                farm.UpdateCosts(); // Maliyetleri güncelle
+                buildButton.enabled = false;
 
-                Debug.Log("Bina Seviyesi : " + Farm.buildLevel);
-                buttonText.text = "Yükselt";
+                StartCoroutine(progressBarController.FarmIsFinished(farm, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        Farm.wasFarmCreated = true;
+                        Farm.canIStartProduction = true;
+                        Farm.buildLevel = 1;
+                        Farm.refreshFoodProductionRate();
+                        farm.UpdateCosts(); // Maliyetleri güncelle
+
+                        Debug.Log("Bina Seviyesi : " + Farm.buildLevel);
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        farmPanelController.refreshFarm();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += farm.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += farm.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += farm.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += farm.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += farm.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
             }
             else
             {
@@ -254,32 +545,97 @@ public class BuildBuilder : MonoBehaviour
         else
         {
             // Zaten bir çiftlik varsa, yeni bir nesne yaratmayýn
-            if (checkResources(farm))
+            if (Farm.buildLevel == 1)
             {
-                // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= farm.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= farm.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= farm.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= farm.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= farm.buildFoodCost;
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-                Farm.buildLevel++;
-                Farm.refreshFoodProductionRate();//Üretim miktarýný güncelliyoruz.
-                farm.UpdateCosts(); // Maliyetleri güncelle
-
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (Farm.buildLevel == 3)
+                if (checkResources(farm))
                 {
-                    Destroy(buildButton.gameObject);
+                    // Kaynaklarý azaltýn
+                    Kingdom.myKingdom.GoldAmount -= farm.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= farm.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= farm.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= farm.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= farm.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.FarmIsFinished(farm, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Farm.buildLevel++;
+                            Farm.refreshFoodProductionRate(); // Üretim miktarýný güncelliyoruz.
+                            farm.UpdateCosts(); // Maliyetleri güncelle
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            farmPanelController.refreshFarm();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += farm.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += farm.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += farm.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += farm.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += farm.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
+                }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                }
+            }
+
+            else if (Farm.buildLevel == 2)
+            {
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+
+                if (checkResources(farm))
+                {
+                    Kingdom.myKingdom.GoldAmount -= farm.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= farm.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= farm.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= farm.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= farm.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.FarmIsFinished(farm, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Farm.buildLevel++;
+                            Farm.refreshFoodProductionRate(); // Üretim miktarýný güncelliyoruz.                  
+                            farmPanelController.refreshFarm();
+                            Destroy(buildButton.gameObject);
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += farm.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += farm.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += farm.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += farm.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += farm.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
                 }
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki BuildFarm fonksiyonunu kontrol ediniz.");
             }
         }
-
     }
+
 
     public void BuildBarracks()
     {
@@ -291,21 +647,46 @@ public class BuildBuilder : MonoBehaviour
             barracks = gameObject.AddComponent<Barracks>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(barracks) && Sawmill.buildLevel >= 1 && Farm.buildLevel >= 2 && Blacksmith.buildLevel >= 1)
+            if (checkResources(barracks) )
             {
-                // Kaynaklarý azaltýn
+                //&& Sawmill.buildLevel >= 1 && Farm.buildLevel >= 2 && Blacksmith.buildLevel >= 1
+                //Kaynaklarý Azalt
                 Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
                 Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
                 Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
 
-                Barracks.wasBarracksCreated = true;
-                Barracks.buildLevel = 1;
-                barracks.UpdateCosts(); // Maliyetleri güncelle
+                buildButton.enabled = false;
 
-                Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
-                buttonText.text = "Yükselt";
+
+                StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        // Gerekli iþlemleri yap
+
+
+                        Barracks.wasBarracksCreated = true;
+                        Barracks.buildLevel = 1;
+                        barracks.UpdateCosts(); // Maliyetleri güncelle
+                        Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        barracksPanelController.refreshBarracks();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
+
             }
             else
             {
@@ -314,10 +695,60 @@ public class BuildBuilder : MonoBehaviour
         }
         else
         {
-            if(Barracks.buildLevel == 1)
+            if (Barracks.buildLevel == 1)
             {
-                if (checkResources(barracks) && Sawmill.buildLevel >= 2 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 2)
+                if (checkResources(barracks) )
                 {
+                    //&& Sawmill.buildLevel >= 2 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 2
+                    // Kaynaklarý azaltýn
+                    //Kaynaklarý Azalt
+                    Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+
+                    StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+
+                            Barracks.wasBarracksCreated = true;
+                            Barracks.buildLevel++;
+                            barracks.UpdateCosts(); // Maliyetleri güncelle
+                            Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                            buildButton.enabled = true;
+                            barracksPanelController.refreshBarracks();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
+                }
+                else
+                {
+                    Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
+                }
+            }
+
+            else if (Barracks.buildLevel == 2)
+            {
+
+                if (checkResources(barracks) )
+                {
+                    //&& Sawmill.buildLevel >= 3 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 3
                     // Kaynaklarý azaltýn
                     Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
                     Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
@@ -325,43 +756,48 @@ public class BuildBuilder : MonoBehaviour
                     Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
                     Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
 
-                    Barracks.buildLevel++;
-                    Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
-                    barracks.UpdateCosts(); // Maliyetleri güncelle
+                    buildButton.enabled = false;
 
+
+                    StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+
+                            Barracks.buildLevel++;
+                            barracks.UpdateCosts(); // Maliyetleri güncelle
+                            Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                            Destroy(buildButton.gameObject);
+                            barracksPanelController.refreshBarracks();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
                 }
                 else
                 {
                     Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
                 }
             }
+
             else
             {
-                if (Barracks.buildLevel == 2)
-                {
-                    if (checkResources(barracks) && Sawmill.buildLevel >= 3 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 3)
-                    {
-                        // Kaynaklarý azaltýn
-                        Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
-                        Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
-                        Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
-                        Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
-                        Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
-
-                        Barracks.buildLevel++;
-                        Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
-                        barracks.UpdateCosts(); // Maliyetleri güncelle                                     
-                        Destroy(buildButton.gameObject);
-
-                    }
-                    else
-                    {
-                        Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
-                    }
-                }
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildBarracks fonksiyonunu kontrol ediniz.");
             }
-        }
-}
+        }                       
+    }
+
+
 
     public void BuildHospital()
     {
@@ -374,7 +810,7 @@ public class BuildBuilder : MonoBehaviour
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
             if (checkResources(hospital))
-            {
+            {buildButton.enabled = false;
                 // Kaynaklarý azaltýn
                 Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
@@ -382,13 +818,37 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
 
-                Hospital.wasHospitalCreated = true;
-                Hospital.buildLevel = 1;
-                hospital.UpdateCapasity();
-                Debug.Log("Bina Seviyesi : " + Hospital.buildLevel);
-                Debug.Log("Hastane Kapasitesi : " + Hospital.capasity);
-                hospital.UpdateCosts(); // Maliyetleri güncelle              
-                buttonText.text = "Yükselt";
+                buildButton.enabled = false;
+
+                StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        // Gerekli iþlemleri yap
+
+                        Hospital.wasHospitalCreated = true;
+                        Hospital.buildLevel = 1;
+                        hospital.UpdateCapasity();
+                        Debug.Log("Bina Seviyesi : " + Hospital.buildLevel);
+                        Debug.Log("Hastane Kapasitesi : " + Hospital.capasity);
+                        hospital.UpdateCosts(); // Maliyetleri güncelle              
+                        buttonText.text = "Yükselt";
+                        hospitalPanelController.refreshHospital();
+                        buildButton.enabled = true;
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
+
+                
             }
             else
             {
@@ -397,9 +857,58 @@ public class BuildBuilder : MonoBehaviour
         }
         else
         {
-            // Zaten bir hastane varsa, yeni bir nesne yaratmayýn
-            if (checkResources(hospital))
+            if(Hospital.buildLevel == 1)
             {
+                if (checkResources(hospital))
+                {
+                    TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+                    // Kaynaklarý azaltýn
+                    Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= hospital.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+                            Hospital.buildLevel++;
+                            hospital.UpdateCapasity();
+                            Debug.Log("Bina Seviyesi : " + Hospital.buildLevel);
+                            Debug.Log("Hastane Kapasitesi : " + Hospital.capasity);
+                            hospital.UpdateCosts(); // Maliyetleri güncelle
+                            buttonText.text = "Yükselt";
+                            hospitalPanelController.refreshHospital();
+                            buildButton.enabled = true;
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
+
+                
+                }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                }
+
+            }
+
+            else if(Hospital.buildLevel == 2)
+            {
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
                 // Kaynaklarý azaltýn
                 Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
@@ -407,21 +916,33 @@ public class BuildBuilder : MonoBehaviour
                 Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
 
-                Hospital.buildLevel++;
-                hospital.UpdateCapasity();
-                Debug.Log("Bina Seviyesi : " + Hospital.buildLevel);
-                Debug.Log("Hastane Kapasitesi : " + Hospital.capasity);
-                hospital.UpdateCosts(); // Maliyetleri güncelle
+                buildButton.enabled = false;
 
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (Hospital.buildLevel == 3)
+                StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
                 {
-                    Destroy(buildButton.gameObject);
-                }
+                    if (isFinished)
+                    {
+                        // Gerekli iþlemleri yap
+                        Hospital.buildLevel++;
+                        hospital.UpdateCapasity();
+                        Destroy(buildButton.gameObject);
+                        hospitalPanelController.refreshHospital();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildHospital fonksiyonunu kontrol ediniz.");
             }
         }
 
@@ -437,19 +958,43 @@ public class BuildBuilder : MonoBehaviour
             lab = gameObject.AddComponent<Lab>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(lab) && Sawmill.buildLevel >= 2) // Kaynaklar yeterliyse, keresteci seviye 2 ise
+            if (checkResources(lab)) // Kaynaklar yeterliyse, keresteci seviye 2 ise
             {
-                Lab.wasLabCreated = true;
-
+                // && Sawmill.buildLevel >= 2
                 Kingdom.myKingdom.GoldAmount -= lab.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= lab.buildStoneCost;
                 Kingdom.myKingdom.WoodAmount -= lab.buildTimberCost;
                 Kingdom.myKingdom.IronAmount -= lab.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= lab.buildFoodCost;
-                Lab.buildLevel++;
-                researchController.OpenResearchUnit(Lab.buildLevel);
-                lab.UpdateCosts();
-                buttonText.text = "Yükselt";
+
+
+                buildButton.enabled = false;
+
+                StartCoroutine(progressBarController.LabIsFinished(lab, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        // Gerekli iþlemleri yap
+                        Lab.wasLabCreated = true;
+                        Lab.buildLevel = 1;
+                        //Araþtýrma Hýzýný Arttýr
+                        researchController.OpenResearchUnit(Lab.buildLevel);
+                        lab.UpdateCosts();
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        labPanelController.refreshLab();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += lab.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += lab.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += lab.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += lab.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += lab.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));                           
             }
 
             else
@@ -461,15 +1006,45 @@ public class BuildBuilder : MonoBehaviour
         {
             if(Lab.buildLevel == 1)//Lab 1.seviyeyse
             {
-                if (checkResources(lab) && ResearchButtonEvents.isResearched[3] && ResearchButtonEvents.isResearched[4])
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+                if (checkResources(lab) )
+                //&& ResearchButtonEvents.isResearched[3] && ResearchButtonEvents.isResearched[4]
                 //Kaynaklar yeterliyse 3.ve 4. araþtýrma yapýldýysa.
                 {
-                    Lab.buildLevel++;
-                    Debug.Log("Bina Seviyesi : 2");
-                    researchController.controlBuildLevelTwoResearches();
-                    lab.UpdateCosts();
-                    //Araþtýrma hýzý arttýr.
 
+
+                    Kingdom.myKingdom.GoldAmount -= lab.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= lab.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= lab.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= lab.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= lab.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.LabIsFinished(lab, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap                           
+                            Lab.buildLevel++;
+                            //Araþtýrma Hýzýný Arttýr
+                            researchController.controlBuildLevelTwoResearches();
+                            lab.UpdateCosts();
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            labPanelController.refreshLab();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += lab.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += lab.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += lab.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += lab.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += lab.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));                   
                 }
                 else
                 {
@@ -479,15 +1054,46 @@ public class BuildBuilder : MonoBehaviour
 
             else if(Lab.buildLevel ==2 )
             {
-                if(checkResources(lab) && ResearchButtonEvents.isResearched[10] && ResearchButtonEvents.isResearched[11] && ResearchButtonEvents.isResearched[12] && Sawmill.buildLevel >= 3)
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+                if (checkResources(lab) )
+                //&& ResearchButtonEvents.isResearched[10] && ResearchButtonEvents.isResearched[11] && ResearchButtonEvents.isResearched[12] && Sawmill.buildLevel >= 3
                 //Kaynak yeterliyse 11,12,13. araþtýrmalar yapýldýysa ve keresteci seviye 3'se
                 {
-                    Lab.buildLevel++;
-                    Debug.Log("Bina Seviyesi : 3");
-                    researchController.controlBuildLevelThreeResearches();
-                    //Araþtýrma hýzý arttýr.
-                    //Maliyet panelini kaldýr.
-                    Destroy(buildButton.gameObject);
+
+
+                    Kingdom.myKingdom.GoldAmount -= lab.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= lab.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= lab.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= lab.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= lab.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.LabIsFinished(lab, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap                           
+                            Lab.buildLevel++;
+                            //Araþtýrma Hýzýný Arttýr
+                            researchController.controlBuildLevelThreeResearches();
+                            lab.UpdateCosts();
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            labPanelController.refreshLab();
+                            Destroy(buildButton.gameObject);
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += lab.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += lab.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += lab.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += lab.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += lab.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));
                 }
                 else
                 {
@@ -635,54 +1241,141 @@ public void BuildDefenseWorkshop()
             warehouse = gameObject.AddComponent<Warehouse>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(warehouse))
+            if (checkResources(warehouse) )
+            //&& Farm.buildLevel >= 1 && Sawmill.buildLevel >= 1 && StonePit.buildLevel >= 1 && Blacksmith.buildLevel >= 1
             {
-                // Kaynaklarý azaltýn
+
+                //Kaynaklarý Azalt
                 Kingdom.myKingdom.GoldAmount -= warehouse.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= warehouse.buildStoneCost;
                 Kingdom.myKingdom.WoodAmount -= warehouse.buildTimberCost;
                 Kingdom.myKingdom.IronAmount -= warehouse.buildIronCost;
                 Kingdom.myKingdom.FoodAmount -= warehouse.buildFoodCost;
 
-                Warehouse.wasWarehouseCreated = true;
-                Warehouse.buildLevel = 1;
-                Warehouse.IncreaseCapacity();
-                warehouse.UpdateCosts();
+                buildButton.enabled = false;
 
-                Debug.Log("Bina Seviyesi : " + Warehouse.buildLevel);
-                buttonText.text = "Yükselt";
+                
+                StartCoroutine(progressBarController.WarehouseIsFinished(warehouse, (isFinished) =>
+                {
+                    if (isFinished)
+                    {
+                        // Gerekli iþlemleri yap
+                        Warehouse.wasWarehouseCreated = true;
+                        Warehouse.buildLevel = 1;
+                        Warehouse.IncreaseCapacity();
+                        warehouse.UpdateCosts();
+                        buttonText.text = "Yükselt";
+                        buildButton.enabled = true;
+                        wareHousePanelController.refreshWarehouse();
+                    }
+                    else
+                    {
+                        // Kaynaklarý iade et
+                        Kingdom.myKingdom.GoldAmount += warehouse.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount += warehouse.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount += warehouse.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount += warehouse.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount += warehouse.buildFoodCost;
+                        buildButton.enabled = true;
+                    }
+                }));
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Yeterli kaynak bulunmamaktadýr veya Çiftlik,Demirci,TaþOcaðý,Keresteci binalarý en az birinci seviye olmalýdýr.");
             }
         }
         else
         {
-            // Zaten bir kýþla varsa, yeni bir nesne yaratmayýn
-            if (checkResources(warehouse))
+            if(Warehouse.buildLevel == 1) 
             {
-                // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= warehouse.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= warehouse.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= warehouse.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= warehouse.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= warehouse.buildFoodCost;
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+                if (checkResources(warehouse) )
+                //&& Sawmill.buildLevel >= 2 && Blacksmith.buildLevel >= 2 && Farm.buildLevel >= 2 && StonePit.buildLevel >= 2
 
-                Warehouse.buildLevel++;
-                Debug.Log("Bina Seviyesi : " + Warehouse.buildLevel);
-                Warehouse.IncreaseCapacity();
-                warehouse.UpdateCosts(); // Maliyetleri güncelle
-
-                // 3. seviyeye ulaþýldýðýnda butonu yok et
-                if (Warehouse.buildLevel == 3)
                 {
-                    Destroy(buildButton.gameObject);
+
+                    Kingdom.myKingdom.GoldAmount -= warehouse.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= warehouse.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= warehouse.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= warehouse.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= warehouse.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.WarehouseIsFinished(warehouse, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+
+                            Warehouse.buildLevel++;
+                            Warehouse.IncreaseCapacity();
+                            warehouse.UpdateCosts();
+                            buttonText.text = "Yükselt";
+                            buildButton.enabled = true;
+                            wareHousePanelController.refreshWarehouse();
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += warehouse.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += warehouse.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += warehouse.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += warehouse.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += warehouse.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));    
+                }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr veya Çiftlik,Demirci,TaþOcaðý,Keresteci binalarý en az ikinci seviye olmalýdýr.");
+                }
+            }
+
+            else if(Warehouse.buildLevel == 2)
+            {
+                TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
+                if (checkResources(warehouse) )
+                //&& Sawmill.buildLevel >= 2 && Blacksmith.buildLevel >= 2 &&  Farm.buildLevel >= 2 && StonePit.buildLevel >= 2
+
+                {
+                    //ProgressBar Ekle,Zaman dolunca aþaðýdakileri yap.
+                    Kingdom.myKingdom.GoldAmount -= warehouse.buildGoldCost;
+                    Kingdom.myKingdom.StoneAmount -= warehouse.buildStoneCost;
+                    Kingdom.myKingdom.WoodAmount -= warehouse.buildTimberCost;
+                    Kingdom.myKingdom.IronAmount -= warehouse.buildIronCost;
+                    Kingdom.myKingdom.FoodAmount -= warehouse.buildFoodCost;
+
+                    buildButton.enabled = false;
+
+                    StartCoroutine(progressBarController.WarehouseIsFinished(warehouse, (isFinished) =>
+                    {
+                        if (isFinished)
+                        {
+                            // Gerekli iþlemleri yap
+                            Warehouse.buildLevel++;
+                            Warehouse.IncreaseCapacity();
+                            wareHousePanelController.refreshWarehouse();
+                            Destroy(buildButton.gameObject);
+                        }
+                        else
+                        {
+                            // Kaynaklarý iade et
+                            Kingdom.myKingdom.GoldAmount += warehouse.buildGoldCost;
+                            Kingdom.myKingdom.StoneAmount += warehouse.buildStoneCost;
+                            Kingdom.myKingdom.WoodAmount += warehouse.buildTimberCost;
+                            Kingdom.myKingdom.IronAmount += warehouse.buildIronCost;
+                            Kingdom.myKingdom.FoodAmount += warehouse.buildFoodCost;
+                            buildButton.enabled = true;
+                        }
+                    }));                  
                 }
             }
             else
             {
-                Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildWareHouse fonksiyonunu kontrol ediniz.");
             }
         }
     }

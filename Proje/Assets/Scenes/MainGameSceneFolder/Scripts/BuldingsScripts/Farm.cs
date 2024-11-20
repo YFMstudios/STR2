@@ -21,7 +21,7 @@ public class Farm : Building
         buildIronCost = 250;
         buildStoneCost = 400;
         buildTimberCost = 800;
-        buildTime = 60f;
+        buildTime = 1f;
         foodProductionRate = 15;
     }
 
@@ -35,7 +35,7 @@ public class Farm : Building
             buildIronCost = 400;
             buildStoneCost = 700;
             buildTimberCost = 1600;
-            buildTime = 90f;
+            buildTime = 1f;
         }
         else if (buildLevel == 2)
         {
@@ -44,7 +44,7 @@ public class Farm : Building
             buildIronCost = 800;
             buildStoneCost = 1200;
             buildTimberCost = 3200;
-            buildTime = 120f;
+            buildTime = 1f;
         }
     }
 

@@ -24,12 +24,12 @@ public class Warehouse : Building
         buildingName = "Warehouse";
         buildingType = BuildingType.ResourceProduction;
         health = 100;
-        buildGoldCost = 1;
-        buildFoodCost = 1;
-        buildIronCost = 1;
-        buildStoneCost = 1;
-        buildTimberCost = 1;
-        buildTime = 10f;
+        buildGoldCost = 2000;
+        buildFoodCost = 1500;
+        buildIronCost = 1500;
+        buildStoneCost = 2000;
+        buildTimberCost = 2500;
+        buildTime = 5f;
     }
 
     public static void IncreaseCapacity()
@@ -63,11 +63,21 @@ public class Warehouse : Building
         // Bina seviyesine göre maliyet güncelleme
         if (buildLevel == 1)
         {
-            buildGoldCost = 1000;
+            buildGoldCost = 4000;
+            buildFoodCost = 3000;
+            buildIronCost = 3000;
+            buildStoneCost = 3500;
+            buildTimberCost = 4000;
+            buildTime = 10f;
         }
         else if (buildLevel == 2)
         {
-            buildGoldCost = 25000;
+            buildGoldCost = 6000;
+            buildFoodCost = 4500;
+            buildIronCost = 4000;
+            buildStoneCost = 5000;
+            buildTimberCost = 5500;
+            buildTime = 15f;
         }
     }
 }

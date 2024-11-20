@@ -21,7 +21,7 @@ public class Blacksmith : Building
         buildIronCost = 700;
         buildStoneCost = 800;
         buildTimberCost = 1000;
-        buildTime = 75f;
+        buildTime = 1f;
         ironProductionRate = 5;
     }
 
@@ -36,7 +36,7 @@ public class Blacksmith : Building
             buildIronCost = 1200;
             buildStoneCost = 1500;
             buildTimberCost = 1800;
-            buildTime = 90f;
+            buildTime = 1f;
         }
         else if (buildLevel == 2)
         {
@@ -45,7 +45,7 @@ public class Blacksmith : Building
             buildIronCost = 2400;
             buildStoneCost = 3000;
             buildTimberCost = 3600;
-            buildTime = 120f;
+            buildTime = 1f;
         }
     }
 
