@@ -33,7 +33,7 @@ public class Barracks : Building
             buildIronCost = 1500;
             buildStoneCost = 1800;
             buildTimberCost = 2200;
-            buildTime = 1f;
+            buildTime = 10f;
         }
         else if (buildLevel == 2)
         {
@@ -42,7 +42,7 @@ public class Barracks : Building
             buildIronCost = 2000;
             buildStoneCost = 2500;
             buildTimberCost = 3000;
-            buildTime = 1f;
+            buildTime = 15f;
         }
     }
 }

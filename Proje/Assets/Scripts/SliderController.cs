@@ -19,6 +19,8 @@ public class SliderController : MonoBehaviour
     public TextMeshProUGUI YemekText;
     public TextMeshProUGUI DemirText;
 
+    
+
     private void Start()
     {
         // Slider'larýn wholeNumbers özelliðini true olarak ayarlama

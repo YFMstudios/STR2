@@ -24,6 +24,8 @@ public class HastaneSliderController : MonoBehaviour
     public TextMeshProUGUI YemekText;
     public TextMeshProUGUI DemirText;
 
+
+
     private float toplamAltin = 0;
     private float toplamKereste = 0;
     private float toplamTas = 0;
@@ -31,7 +33,7 @@ public class HastaneSliderController : MonoBehaviour
     private float toplamDemir = 0;
 
     void Start()
-    {
+    {   //Furkanýn sahneden alýna bilgiler burada eþitlenecek.
         yaraliSavasciSayisi = 100;
         yaraliOkcuSayisi = 150;
         yaraliMizrakciSayisi = 250;

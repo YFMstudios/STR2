@@ -701,41 +701,51 @@ public class BuildBuilder : MonoBehaviour
                 {
                     //&& Sawmill.buildLevel >= 2 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 2
                     // Kaynaklarý azaltýn
-                    //Kaynaklarý Azalt
-                    Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
-                    Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
-                    Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
-                    Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
-                    Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
-
-                    buildButton.enabled = false;
-
-
-                    StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
+                    
+                    //Eðer asker üretimi varsa buraya girme -----> Asker üretimi yaparken geliþtirilemez.
+                    if (progressBarController.isUnitCreationActive)
                     {
-                        if (isFinished)
-                        {
-                            // Gerekli iþlemleri yap
+                        Debug.Log("Asker Üretimi Sýrasýnda Bina Yükseltmesi Yapýlamaz.");
+                    }
+                    //yoksa gir.
+                    else
+                    {
+                        //Kaynaklarý Azalt
+                        Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
+
+                        buildButton.enabled = false;
 
 
-                            Barracks.wasBarracksCreated = true;
-                            Barracks.buildLevel++;
-                            barracks.UpdateCosts(); // Maliyetleri güncelle
-                            Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
-                            buildButton.enabled = true;
-                            barracksPanelController.refreshBarracks();
-                        }
-                        else
+                        StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
                         {
-                            // Kaynaklarý iade et
-                            Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
-                            Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
-                            Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
-                            Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
-                            Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
-                            buildButton.enabled = true;
-                        }
-                    }));
+                            if (isFinished)
+                            {
+                                // Gerekli iþlemleri yap
+
+
+                                Barracks.wasBarracksCreated = true;
+                                Barracks.buildLevel++;
+                                barracks.UpdateCosts(); // Maliyetleri güncelle
+                                Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                                buildButton.enabled = true;
+                                barracksPanelController.refreshBarracks();
+                            }
+                            else
+                            {
+                                // Kaynaklarý iade et
+                                Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
+                                Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
+                                Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
+                                Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
+                                Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
+                                buildButton.enabled = true;
+                            }
+                        }));
+                    }     
                 }
                 else
                 {
@@ -745,51 +755,60 @@ public class BuildBuilder : MonoBehaviour
 
             else if (Barracks.buildLevel == 2)
             {
-
                 if (checkResources(barracks) )
                 {
                     //&& Sawmill.buildLevel >= 3 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 3
                     // Kaynaklarý azaltýn
-                    Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
-                    Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
-                    Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
-                    Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
-                    Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
 
-                    buildButton.enabled = false;
-
-
-                    StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
+                    //Asker üretimi varsa buraya girme.             
+                    if (progressBarController.isUnitCreationActive)
                     {
-                        if (isFinished)
-                        {
-                            // Gerekli iþlemleri yap
+                        Debug.Log("Asker Üretimi Sýrasýnda Bina Yükseltmesi Yapýlamaz.");
+                    }
+                    //yoksa gir.
+                    else
+                    {
+                        //Kaynaklarý Azalt
+                        Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount -= barracks.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount -= barracks.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount -= barracks.buildFoodCost;
+
+                        buildButton.enabled = false;
 
 
-                            Barracks.buildLevel++;
-                            barracks.UpdateCosts(); // Maliyetleri güncelle
-                            Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
-                            Destroy(buildButton.gameObject);
-                            barracksPanelController.refreshBarracks();
-                        }
-                        else
+                        StartCoroutine(progressBarController.BarracksIsFinished(barracks, (isFinished) =>
                         {
-                            // Kaynaklarý iade et
-                            Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
-                            Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
-                            Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
-                            Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
-                            Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
-                            buildButton.enabled = true;
-                        }
-                    }));
+                            if (isFinished)
+                            {
+                                // Gerekli iþlemleri yap
+
+
+                                Barracks.buildLevel++;
+                                barracks.UpdateCosts(); // Maliyetleri güncelle
+                                Debug.Log("Bina Seviyesi : " + Barracks.buildLevel);
+                                Destroy(buildButton.gameObject);
+                                barracksPanelController.refreshBarracks();
+                            }
+                            else
+                            {
+                                // Kaynaklarý iade et
+                                Kingdom.myKingdom.GoldAmount += barracks.buildGoldCost;
+                                Kingdom.myKingdom.StoneAmount += barracks.buildStoneCost;
+                                Kingdom.myKingdom.WoodAmount += barracks.buildTimberCost;
+                                Kingdom.myKingdom.IronAmount += barracks.buildIronCost;
+                                Kingdom.myKingdom.FoodAmount += barracks.buildFoodCost;
+                                buildButton.enabled = true;
+                            }
+                        }));
+                    } 
                 }
                 else
                 {
                     Debug.Log("Binayý oluþturmak için gerekli gereksinimleri saðlamýyorsunuz.");
                 }
             }
-
             else
             {
                 Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildBarracks fonksiyonunu kontrol ediniz.");
@@ -862,42 +881,47 @@ public class BuildBuilder : MonoBehaviour
                 if (checkResources(hospital))
                 {
                     TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
-                    // Kaynaklarý azaltýn
-                    Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
-                    Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
-                    Kingdom.myKingdom.WoodAmount -= hospital.buildTimberCost;
-                    Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
-                    Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
-
-                    buildButton.enabled = false;
-
-                    StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
+                    if(progressBarController.isHealActive)
                     {
-                        if (isFinished)
-                        {
-                            // Gerekli iþlemleri yap
-                            Hospital.buildLevel++;
-                            hospital.UpdateCapasity();
-                            Debug.Log("Bina Seviyesi : " + Hospital.buildLevel);
-                            Debug.Log("Hastane Kapasitesi : " + Hospital.capasity);
-                            hospital.UpdateCosts(); // Maliyetleri güncelle
-                            buttonText.text = "Yükselt";
-                            hospitalPanelController.refreshHospital();
-                            buildButton.enabled = true;
-                        }
-                        else
-                        {
-                            // Kaynaklarý iade et
-                            Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
-                            Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
-                            Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
-                            Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
-                            Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
-                            buildButton.enabled = true;
-                        }
-                    }));
+                        Debug.Log("Ýyileþtirme esnasýnda bina yükseltmesi yapýlamaz.");
+                    }
+                    else
+                    {
+                        Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount -= hospital.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
 
-                
+                        buildButton.enabled = false;
+
+                        StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
+                        {
+                            if (isFinished)
+                            {
+                                // Gerekli iþlemleri yap
+                                Hospital.buildLevel++;
+                                hospital.UpdateCapasity();
+                                Debug.Log("Bina Seviyesi : " + Hospital.buildLevel);
+                                Debug.Log("Hastane Kapasitesi : " + Hospital.capasity);
+                                hospital.UpdateCosts(); // Maliyetleri güncelle
+                                buttonText.text = "Yükselt";
+                                hospitalPanelController.refreshHospital();
+                                buildButton.enabled = true;
+                            }
+                            else
+                            {
+                                // Kaynaklarý iade et
+                                Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
+                                Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
+                                Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
+                                Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
+                                Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
+                                buildButton.enabled = true;
+                            }
+                        }));
+
+                    }
                 }
                 else
                 {
@@ -910,36 +934,54 @@ public class BuildBuilder : MonoBehaviour
             {
                 TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
                 // Kaynaklarý azaltýn
-                Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
-                Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
-                Kingdom.myKingdom.WoodAmount -= hospital.buildTimberCost;
-                Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
-                Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
 
-                buildButton.enabled = false;
 
-                StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
+                if (checkResources(hospital))
                 {
-                    if (isFinished)
+                   
+                    if (progressBarController.isHealActive)
                     {
-                        // Gerekli iþlemleri yap
-                        Hospital.buildLevel++;
-                        hospital.UpdateCapasity();
-                        Destroy(buildButton.gameObject);
-                        hospitalPanelController.refreshHospital();
+                        Debug.Log("Ýyileþtirme esnasýnda bina yükseltmesi yapýlamaz.");
                     }
                     else
                     {
-                        // Kaynaklarý iade et
-                        Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
-                        Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
-                        Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
-                        Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
-                        Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
-                        buildButton.enabled = true;
+                        Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
+                        Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
+                        Kingdom.myKingdom.WoodAmount -= hospital.buildTimberCost;
+                        Kingdom.myKingdom.IronAmount -= hospital.buildIronCost;
+                        Kingdom.myKingdom.FoodAmount -= hospital.buildFoodCost;
+
+                        buildButton.enabled = false;
+
+                        StartCoroutine(progressBarController.HospitalIsFinished(hospital, (isFinished) =>
+                        {
+                            if (isFinished)
+                            {
+                                // Gerekli iþlemleri yap
+                                Hospital.buildLevel++;
+                                hospital.UpdateCapasity();
+                                Destroy(buildButton.gameObject);
+                                hospitalPanelController.refreshHospital();
+                            }
+                            else
+                            {
+                                // Kaynaklarý iade et
+                                Kingdom.myKingdom.GoldAmount += hospital.buildGoldCost;
+                                Kingdom.myKingdom.StoneAmount += hospital.buildStoneCost;
+                                Kingdom.myKingdom.WoodAmount += hospital.buildTimberCost;
+                                Kingdom.myKingdom.IronAmount += hospital.buildIronCost;
+                                Kingdom.myKingdom.FoodAmount += hospital.buildFoodCost;
+                                buildButton.enabled = true;
+                            }
+                        }));
                     }
-                }));
+                }
+                else
+                {
+                    Debug.Log("Yeterli kaynak bulunmamaktadýr");
+                }
             }
+
             else
             {
                 Debug.Log("Bir sorun var gibi duruyor 'BuildBuilder' scriptindeki buildHospital fonksiyonunu kontrol ediniz.");

@@ -42,7 +42,7 @@ public class Kingdom : MonoBehaviour
         this.soldierAmount = soldierAmount;
         this.flag = flag; // Bayrak özelliði için atama eklendi
     }
-    public Kingdom() { }
+     public Kingdom() { }
 
     public static void CreateKingdoms()
     {

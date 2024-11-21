@@ -9333,6 +9333,12 @@ MonoBehaviour:
   savasciHealTime: 1.5
   okcuHealTime: 2.5
   mizrakciHealTime: 4.5
+  isBarracksBuildActive: 0
+  isUnitCreationActive: 0
+  isHealActive: 0
+  isHospitalBuildActive: 0
+  createUnitButton: {fileID: 84412077}
+  healButton: {fileID: 1063184935}
   wareHousePanelController: {fileID: 1857280096}
   stonepitPanelController: {fileID: 6597936}
   sawmillPanelController: {fileID: 1349949392}
