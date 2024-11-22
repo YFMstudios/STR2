@@ -9,6 +9,7 @@ public class ResearchButtonEvents : MonoBehaviour
     public Image[] researchItems = new Image[18];
     public Button[] button = new Button[18];
 
+    public ImageColorTransition imageColorTransition;
     public void level1Research()
     {
         if (Lab.wasLabCreated == true)
@@ -18,13 +19,10 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            Farm.foodProductionRate += 1;
-            Sawmill.timberProductionRate += 1;
-            StonePit.stoneProductionRate += 1;
-            Blacksmith.ironProductionRate += 1;
 
-            isResearched[0] = true;
-            researchItems[0].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye1();
+
+            //isResearched[0] = true;            
             Destroy(button[0].gameObject);
         }
         else
@@ -43,8 +41,10 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[1] = true;
-            researchItems[1].color = new Color(255f, 255f, 255f, 255f);
+
+            imageColorTransition.StartColorTransitionSeviye2();
+            //isResearched[1] = true;
+            //researchItems[1].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[1].gameObject);
         }
         else
@@ -64,8 +64,10 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[2] = true;
-            researchItems[2].color = new Color(255f, 255f, 255f, 255f);
+
+            imageColorTransition.StartColorTransitionSeviye3();
+            //isResearched[2] = true;
+            //researchItems[2].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[2].gameObject);
         }
         else
@@ -84,8 +86,10 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[3] = true;
-            researchItems[3].color = new Color(255f, 255f, 255f, 255f);
+
+            imageColorTransition.StartColorTransitionSeviye4();
+            //isResearched[3] = true;
+            //researchItems[3].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[3].gameObject);
         }
         else
@@ -104,8 +108,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[4] = true;
-            researchItems[4].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye5();
+            //isResearched[4] = true;
+            //researchItems[4].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[4].gameObject);
         }
         else
@@ -124,8 +129,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[5] = true;
-            researchItems[5].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye6();
+            //isResearched[5] = true;
+            //researchItems[5].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[5].gameObject);
         }
         else
@@ -145,8 +151,10 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[6] = true;
-            researchItems[6].color = new Color(255f, 255f, 255f, 255f);
+
+            imageColorTransition.StartColorTransitionSeviye7();
+            //isResearched[6] = true;
+            //researchItems[6].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[6].gameObject);
         }
         else
@@ -165,8 +173,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[7] = true;
-            researchItems[7].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye8();
+            //isResearched[7] = true;
+            //researchItems[7].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[7].gameObject);
         }
         else
@@ -184,8 +193,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[8] = true;
-            researchItems[8].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye9();
+            //isResearched[8] = true;
+            //researchItems[8].color = new Color(255f, 255f, 255f, 255f);
             Destroy(button[8].gameObject);
         }
         else
@@ -205,8 +215,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[9] = true;
-            researchItems[9].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[9] = true;
+            //researchItems[9].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye10();
             Destroy(button[9].gameObject);
         }
         else
@@ -225,8 +236,10 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[10] = true;
-            researchItems[10].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[10] = true;
+            //researchItems[10].color = new Color(255f, 255f, 255f, 255f);
+
+            imageColorTransition.StartColorTransitionSeviye11();
             Destroy(button[10].gameObject);
         }
         else
@@ -245,8 +258,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[11] = true;
-            researchItems[11].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[11] = true;
+            //researchItems[11].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye12();
             Destroy(button[11].gameObject);
         }
         else
@@ -265,8 +279,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[12] = true;
-            researchItems[12].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[12] = true;
+            //researchItems[12].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye13();
             Destroy(button[12].gameObject);
         }
         else
@@ -285,8 +300,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[13] = true;
-            researchItems[13].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[13] = true;
+            //researchItems[13].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye14();
             Destroy(button[13].gameObject);
         }
         else
@@ -305,8 +321,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[14] = true;
-            researchItems[14].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[14] = true;
+            //researchItems[14].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye15();
             Destroy(button[14].gameObject);
         }
         else
@@ -324,8 +341,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[15] = true;
-            researchItems[15].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[15] = true;
+            //researchItems[15].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye16();
             Destroy(button[15].gameObject);
         }
         else
@@ -343,8 +361,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[16] = true;
-            researchItems[16].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[16] = true;
+            //researchItems[16].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye17();
             Destroy(button[16].gameObject);
         }
         else
@@ -363,8 +382,9 @@ public class ResearchButtonEvents : MonoBehaviour
             Kingdom.myKingdom.WoodAmount -= 1;
             Kingdom.myKingdom.StoneAmount -= 1;
 
-            isResearched[17] = true;
-            researchItems[17].color = new Color(255f, 255f, 255f, 255f);
+            //isResearched[17] = true;
+            //researchItems[17].color = new Color(255f, 255f, 255f, 255f);
+            imageColorTransition.StartColorTransitionSeviye18();
             Destroy(button[17].gameObject);
         }
         else

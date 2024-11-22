@@ -8,13 +8,13 @@ public class ResearchController : MonoBehaviour
 
 
     public Image[] lockItems = new Image[18];
- 
+
     public void OpenResearchUnit(int buildLevel)
     {
         if (buildLevel == 1)
         {
-            lockItems[0].enabled = false;
-
+            // Ýlk seviyenin kilidini aç
+            lockItems[0].enabled = false;         
         }
     }
     public void OpenTwoAndThreeLevels()
