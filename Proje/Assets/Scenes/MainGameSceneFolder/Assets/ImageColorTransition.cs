@@ -7,6 +7,10 @@ public class ImageColorTransition : MonoBehaviour
     public Image[] seviyeImages; // Tüm seviyeler için Image nesnelerini tutar
     public float duration = 120f; // Geçiþ süresi (örnek: 2 dakika)
 
+    public ProgressBarController progressBarController;
+    public Button createLabButton;
+
+
     private Material[] uniqueMaterials; // Her Image için ayrý materyaller
     public ResearchController researchController;
     void Start()
@@ -173,67 +177,86 @@ public class ImageColorTransition : MonoBehaviour
 
     private IEnumerator ColorTransition(Image targetImage , int researchLevel)
     {
-        //Þuan araþtýrýlma yapýlýyorsa ---> Araþtýrmanýn Bitmesini Bekle
-        
-        
-        //Yapýlmýyorsa aþaðýdakileri yap
-
-        Material material = targetImage.material;
-        if (material == null)
+        if(progressBarController.isLabBuildActive || ResearchButtonEvents.isAnyResearchActive)
         {
-            Debug.LogError($"Material is missing on the target image: {targetImage.name}");
-            yield break;
+            Debug.Log("Bina Yüksektmesi veya bir araþtýrmanýn halihazýrda aktif olmasý durumunda araþtýrma yapamazsýnýz.");
         }
-
-        float elapsedTime = 0f;
-        while (elapsedTime < duration)
+        else
         {
-            elapsedTime += Time.deltaTime;
-            float progress = elapsedTime / duration; // 0 ile 1 arasýnda ilerleme
-            material.SetFloat("_FillAmount", progress); // Renklendirme ilerlemesi
-            yield return null;
-        }
-        material.SetFloat("_FillAmount", 1f); // Tamamen renkli hale getir
-        ResearchButtonEvents.isResearched[researchLevel] = true;
-        
-        switch (researchLevel)
-        {
-            case 0: researchController.OpenTwoAndThreeLevels(); break;
+            Material material = targetImage.material;
+            if (material == null)
+            {
+                Debug.LogError($"Material is missing on the target image: {targetImage.name}");
+                yield break;
+            }
 
-            case 1 : researchController.OpenFourLevel(); break;
+            float elapsedTime = 0f;
+            ResearchButtonEvents.isAnyResearchActive = true;
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float progress = elapsedTime / duration; // 0 ile 1 arasýnda ilerleme
+                material.SetFloat("_FillAmount", progress); // Renklendirme ilerlemesi
+                yield return null;
+            }
+            material.SetFloat("_FillAmount", 1f); // Tamamen renkli hale getir
+            ResearchButtonEvents.isResearched[researchLevel] = true;
+            ResearchButtonEvents.isAnyResearchActive = false;
+            if(createLabButton != null)
+            {
+                createLabButton.enabled = true;
+            }
+           
 
-            case 2: researchController.OpenFiveLevel(); break;
+            switch (researchLevel)
+            {
+                case 0: researchController.OpenTwoAndThreeLevels(); break;
 
-            case 3: researchController.controlBuildLevelTwoResearches(); break;
+                case 1: researchController.OpenFourLevel(); break;
 
-            case 4: researchController.controlBuildLevelTwoResearches(); break;
+                case 2: researchController.OpenFiveLevel(); break;
 
-            case 5: researchController.control9And10Levels(); break;
+                case 3: researchController.controlBuildLevelTwoResearches(); break;
 
-            case 6: researchController.control9And10Levels(); break;
+                case 4: researchController.controlBuildLevelTwoResearches(); break;
 
-            case 7: researchController.control9And10Levels(); break;
+                case 5: researchController.control9And10Levels(); break;
 
-            case 8: researchController.control11And12And13Levels(); break;
+                case 6: researchController.control9And10Levels(); break;
 
-            case 9: researchController.control11And12And13Levels(); break;
+                case 7: researchController.control9And10Levels(); break;
+
+                case 8: researchController.control11And12And13Levels(); break;
+
+                case 9: researchController.control11And12And13Levels(); break;
+
+                case 10: researchController.controlBuildLevelThreeResearches(); break;
+
+                case 11: researchController.controlBuildLevelThreeResearches(); break;
+
+                case 12: researchController.controlBuildLevelThreeResearches(); break;
+
+                case 13: researchController.control16And17Levels(); break;
+
+                case 14: researchController.control16And17Levels(); break;
+
+                case 15: researchController.level18Control(); break;
+
+                case 16: researchController.level18Control(); break;
+
+                case 17: researchController.level18Control(); break;
+
+                default: break;
+            }
+
             
-            case 10: researchController.controlBuildLevelThreeResearches(); break;
-
-            case 11: researchController.controlBuildLevelThreeResearches(); break;
-
-            case 12: researchController.controlBuildLevelThreeResearches(); break;
-
-            case 13: researchController.control16And17Levels(); break;
-
-            case 14: researchController.control16And17Levels(); break;
-
-            case 15: researchController.level18Control(); break;
-
-            case 16: researchController.level18Control(); break;
-
-            case 17: researchController.level18Control(); break;
-
         }
     }
-}
+        //Bina Yükseltmesi Aktifse Yapma
+        //Deðilse Yap
+        //Baþka Bir Yükseltme Aktifse Yapma
+        //Deðilse Yap
+
+        
+    }
+

@@ -647,9 +647,8 @@ public class BuildBuilder : MonoBehaviour
             barracks = gameObject.AddComponent<Barracks>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(barracks) )
-            {
-                //&& Sawmill.buildLevel >= 1 && Farm.buildLevel >= 2 && Blacksmith.buildLevel >= 1
+            if (checkResources(barracks) && Sawmill.buildLevel >= 1 && Farm.buildLevel >= 2 && Blacksmith.buildLevel >= 1)
+            {                
                 //Kaynaklarý Azalt
                 Kingdom.myKingdom.GoldAmount -= barracks.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= barracks.buildStoneCost;
@@ -697,11 +696,8 @@ public class BuildBuilder : MonoBehaviour
         {
             if (Barracks.buildLevel == 1)
             {
-                if (checkResources(barracks) )
+                if (checkResources(barracks) && Sawmill.buildLevel >= 2 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 2)
                 {
-                    //&& Sawmill.buildLevel >= 2 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 2
-                    // Kaynaklarý azaltýn
-                    
                     //Eðer asker üretimi varsa buraya girme -----> Asker üretimi yaparken geliþtirilemez.
                     if (progressBarController.isUnitCreationActive)
                     {
@@ -755,11 +751,8 @@ public class BuildBuilder : MonoBehaviour
 
             else if (Barracks.buildLevel == 2)
             {
-                if (checkResources(barracks) )
+                if (checkResources(barracks) && Sawmill.buildLevel >= 3 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 3)
                 {
-                    //&& Sawmill.buildLevel >= 3 && Farm.buildLevel >= 3 && Blacksmith.buildLevel >= 3
-                    // Kaynaklarý azaltýn
-
                     //Asker üretimi varsa buraya girme.             
                     if (progressBarController.isUnitCreationActive)
                     {
@@ -829,7 +822,8 @@ public class BuildBuilder : MonoBehaviour
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
             if (checkResources(hospital))
-            {buildButton.enabled = false;
+            {
+                buildButton.enabled = false;
                 // Kaynaklarý azaltýn
                 Kingdom.myKingdom.GoldAmount -= hospital.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= hospital.buildStoneCost;
@@ -1000,9 +994,9 @@ public class BuildBuilder : MonoBehaviour
             lab = gameObject.AddComponent<Lab>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(lab)) // Kaynaklar yeterliyse, keresteci seviye 2 ise
+            if (checkResources(lab) && Sawmill.buildLevel >= 2) // Kaynaklar yeterliyse, keresteci seviye 2 ise
             {
-                // && Sawmill.buildLevel >= 2
+                // 
                 Kingdom.myKingdom.GoldAmount -= lab.buildGoldCost;
                 Kingdom.myKingdom.StoneAmount -= lab.buildStoneCost;
                 Kingdom.myKingdom.WoodAmount -= lab.buildTimberCost;
@@ -1046,11 +1040,11 @@ public class BuildBuilder : MonoBehaviour
         }
         else//Daha önce üretildi ise
         {
-            if(Lab.buildLevel == 1)//Lab 1.seviyeyse
+            if(Lab.buildLevel == 1 & ResearchButtonEvents.isResearched[3] && ResearchButtonEvents.isResearched[4])//Lab 1.seviyeyse
             {
                 TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
                 if (checkResources(lab) )
-                //&& ResearchButtonEvents.isResearched[3] && ResearchButtonEvents.isResearched[4]
+                //&
                 //Kaynaklar yeterliyse 3.ve 4. araþtýrma yapýldýysa.
                 {
 
@@ -1097,8 +1091,8 @@ public class BuildBuilder : MonoBehaviour
             else if(Lab.buildLevel ==2 )
             {
                 TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
-                if (checkResources(lab) )
-                //&& ResearchButtonEvents.isResearched[10] && ResearchButtonEvents.isResearched[11] && ResearchButtonEvents.isResearched[12] && Sawmill.buildLevel >= 3
+                if (checkResources(lab) && ResearchButtonEvents.isResearched[10] && ResearchButtonEvents.isResearched[11] && ResearchButtonEvents.isResearched[12] && Sawmill.buildLevel >= 3)
+                //
                 //Kaynak yeterliyse 11,12,13. araþtýrmalar yapýldýysa ve keresteci seviye 3'se
                 {
 
@@ -1283,8 +1277,8 @@ public void BuildDefenseWorkshop()
             warehouse = gameObject.AddComponent<Warehouse>();
             TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
 
-            if (checkResources(warehouse) )
-            //&& Farm.buildLevel >= 1 && Sawmill.buildLevel >= 1 && StonePit.buildLevel >= 1 && Blacksmith.buildLevel >= 1
+            if (checkResources(warehouse) && Farm.buildLevel >= 1 && Sawmill.buildLevel >= 1 && StonePit.buildLevel >= 1 && Blacksmith.buildLevel >= 1)
+            //
             {
 
                 //Kaynaklarý Azalt
@@ -1332,8 +1326,8 @@ public void BuildDefenseWorkshop()
             if(Warehouse.buildLevel == 1) 
             {
                 TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
-                if (checkResources(warehouse) )
-                //&& Sawmill.buildLevel >= 2 && Blacksmith.buildLevel >= 2 && Farm.buildLevel >= 2 && StonePit.buildLevel >= 2
+                if (checkResources(warehouse) && Sawmill.buildLevel >= 2 && Blacksmith.buildLevel >= 2 && Farm.buildLevel >= 2 && StonePit.buildLevel >= 2)
+                //
 
                 {
 
@@ -1376,11 +1370,11 @@ public void BuildDefenseWorkshop()
                 }
             }
 
-            else if(Warehouse.buildLevel == 2)
+            else if(Warehouse.buildLevel == 2 && Sawmill.buildLevel >= 2 && Blacksmith.buildLevel >= 2 && Farm.buildLevel >= 2 && StonePit.buildLevel >= 2)
             {
                 TextMeshProUGUI buttonText = buildButton.GetComponentInChildren<TextMeshProUGUI>();
                 if (checkResources(warehouse) )
-                //&& Sawmill.buildLevel >= 2 && Blacksmith.buildLevel >= 2 &&  Farm.buildLevel >= 2 && StonePit.buildLevel >= 2
+                //
 
                 {
                     //ProgressBar Ekle,Zaman dolunca aþaðýdakileri yap.
