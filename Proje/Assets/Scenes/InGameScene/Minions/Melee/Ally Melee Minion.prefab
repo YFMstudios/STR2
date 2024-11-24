@@ -304,7 +304,7 @@ MonoBehaviour:
   aggroRange: 100
   targetSwitchInterval: 0.25
   rotationSpeed: 5
-  attackCooldown: 1
+  attackCooldown: 0.3
 --- !u!114 &-3816466005430610682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 130f40cb047820f46a68816a7ad6e96a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.5
+  attackCooldown: 0.3
 --- !u!114 &7627656331015363098
 MonoBehaviour:
   m_ObjectHideFlags: 0

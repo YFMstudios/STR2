@@ -16,6 +16,9 @@ public class ObjectiveStats : MonoBehaviour
 
     private HealthUII healthUII;
 
+    // Animator referansı
+    private Animator animator;
+
     private void Awake()
     {
         healthUII = GetComponent<HealthUII>();
@@ -23,6 +26,9 @@ public class ObjectiveStats : MonoBehaviour
         targetHealth = health;
 
         healthUII.Start3DSlider(health);
+
+        // Animator referansını al
+        animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(float damageAmount)
@@ -39,13 +45,20 @@ public class ObjectiveStats : MonoBehaviour
 
     private void HandleDeath()
     {
+        // Ölüm animasyonunu başlat
+        if (animator != null)
+        {
+            animator.SetTrigger("isDead");
+        }
+
+        // Karakteri yok etmeden önce animasyonun bitmesini bekleyin
         if (gameObject.CompareTag("EnemyTurret"))
         {
-            Destroy(gameObject);
+            Destroy(gameObject, 1f);  // 1 saniye animasyon süresi
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(gameObject, 3f);  // 1 saniye animasyon süresi
         }
     }
 
