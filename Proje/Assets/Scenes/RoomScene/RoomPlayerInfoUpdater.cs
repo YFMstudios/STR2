@@ -1,4 +1,12 @@
+<<<<<<< Updated upstream
 using System.Collections;
+=======
+<<<<<<< HEAD
+ using System.Collections;
+=======
+using System.Collections;
+>>>>>>> 6a036ac4ab7c1ab6d801be4818d97a4d52850e86
+>>>>>>> Stashed changes
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
@@ -19,6 +27,132 @@ public class RoomManager : MonoBehaviourPunCallbacks
         StartCoroutine(UpdatePlayerData());
     }
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+private IEnumerator UpdatePlayerData()
+{
+    while (true)
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            foreach (KeyValuePair<int, Player> playerEntry in PhotonNetwork.CurrentRoom.Players)
+            {
+                Player player = playerEntry.Value;
+
+                // Oyuncunun bilgilerini kontrol et
+                if (player.CustomProperties == null || player.CustomProperties.Count == 0)
+                {
+                    Debug.Log($"Oyuncunun bilgileri eksik, prefab oluşturulmadı: {player.NickName}");
+                    continue;
+                }
+
+                // Krallık bilgisi al
+                string kingdom = player.CustomProperties.ContainsKey("Kingdom")
+                    ? player.CustomProperties["Kingdom"].ToString()
+                    : "Unknown";
+
+                // Bilgiler eksikse prefab oluşturmayı atla
+                if (kingdom == "Unknown")
+                {
+                    Debug.Log($"Krallık bilgisi eksik, prefab oluşturulmadı: {player.NickName}");
+                    continue;
+                }
+
+                // Eğer prefab zaten varsa güncelle
+                if (playerObjects.ContainsKey(player.ActorNumber))
+                {
+                    var playerDisplay = playerObjects[player.ActorNumber].GetComponent<PlayerInfoDisplay>();
+                    playerDisplay.UpdateInfo(player.NickName, kingdom);
+                }
+                else
+                {
+                    // Yeni prefab oluştur
+                    GameObject playerObject = Instantiate(PlayerInfoPrefab, Panel);
+                    playerObject.transform.localScale = new Vector3(0.8f, 0.5f, 0.5f); // Prefab'ı %80 küçült
+                    playerObjects[player.ActorNumber] = playerObject;
+                    playerOrder.Add(player.ActorNumber);
+                    UpdatePrefabPositions();
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(1f); // 1 saniyede bir güncelle
+    }
+}
+
+
+
+    private void UpdatePrefabPositions()
+{
+    // Panelin üst kısmını başlangıç pozisyonu olarak al ve biraz daha yukarı kaydır
+    float startY = Panel.rect.height / 2 - (topPadding - 50f); // Ekstra 50f yukarı kaydırma
+
+    for (int i = 0; i < playerOrder.Count; i++)
+    {
+        int actorNumber = playerOrder[i];
+        if (playerObjects.ContainsKey(actorNumber))
+        {
+            // Prefab'in pozisyonunu güncelle
+            GameObject playerObject = playerObjects[actorNumber];
+            RectTransform rectTransform = playerObject.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(0, startY - (i * yOffset));
+        }
+    }
+}
+
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+{
+    // Prefab ve oyuncu sırasını kaldır
+    if (playerObjects.ContainsKey(otherPlayer.ActorNumber))
+    {
+        Destroy(playerObjects[otherPlayer.ActorNumber]);
+        playerObjects.Remove(otherPlayer.ActorNumber);
+        playerOrder.Remove(otherPlayer.ActorNumber);
+        UpdatePrefabPositions();
+    }
+
+    // Oyuncunun bilgilerini temizle
+    if (otherPlayer.CustomProperties != null)
+    {
+        otherPlayer.CustomProperties.Clear(); // Oyuncunun özel bilgilerini temizle
+        Debug.Log($"Oyuncunun bilgileri temizlendi: {otherPlayer.NickName}");
+    }
+}
+
+private void ClearLocalPlayerData()
+{
+    // Yerel oyuncunun özel bilgilerini temizle
+    if (PhotonNetwork.LocalPlayer.CustomProperties != null)
+    {
+        ExitGames.Client.Photon.Hashtable emptyProps = new ExitGames.Client.Photon.Hashtable();
+        PhotonNetwork.LocalPlayer.SetCustomProperties(emptyProps); // Photon sunucusunda da temizle
+        Debug.Log("Yerel oyuncunun bilgileri temizlendi.");
+    }
+}
+
+
+public override void OnLeftRoom()
+{
+    ClearLocalPlayerData();
+
+    // Prefabları temizle
+    foreach (var playerObject in playerObjects.Values)
+    {
+        Destroy(playerObject);
+    }
+
+    playerObjects.Clear();
+    playerOrder.Clear();
+
+    Debug.Log("Odadan çıkıldı ve prefablar temizlendi.");
+}
+
+
+} 
+=======
+>>>>>>> Stashed changes
     private IEnumerator UpdatePlayerData()
     {
         while (true)
@@ -89,3 +223,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 }
+<<<<<<< Updated upstream
+=======
+>>>>>>> 6a036ac4ab7c1ab6d801be4818d97a4d52850e86
+>>>>>>> Stashed changes

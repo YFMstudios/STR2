@@ -119,6 +119,38 @@ public new void OnDisable()
     }
 
     private void CreateRoomInternal(string roomName)
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+{
+    if (string.IsNullOrEmpty(roomName))
+    {
+        Debug.LogWarning("Lütfen bir oda adı girin!");
+        return;
+    }
+
+    // 6 basamaklı rastgele bir sayı oluştur
+    string roomNumber = Random.Range(100000, 999999).ToString();
+
+    // Oda ismi ve rastgele sayıyı birleştir
+    string fullRoomName = $"{roomName}_{roomNumber}";
+
+    RoomOptions roomOptions = new RoomOptions
+    {
+        MaxPlayers = 6,          // Maksimum 6 oyuncu
+        IsVisible = true,        // Oda herkes tarafından görülebilir
+        IsOpen = true,           // Oda yeni oyunculara açık
+        PlayerTtl = 0,           // Oyuncu odadan çıkar çıkmaz bilgileri sıfırlanır
+        EmptyRoomTtl = 300000    // Oda boş kaldıktan sonra 5 dakika açık kalır
+    };
+
+    PhotonNetwork.CreateRoom(fullRoomName, roomOptions);
+    Debug.Log($"Oda oluşturma isteği gönderildi: {fullRoomName}");
+}
+
+
+=======
+>>>>>>> Stashed changes
     {
         if (string.IsNullOrEmpty(roomName))
         {
@@ -144,6 +176,10 @@ public new void OnDisable()
         Debug.Log($"Oda oluşturma isteği gönderildi: {fullRoomName}");
     }
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> 6a036ac4ab7c1ab6d801be4818d97a4d52850e86
+>>>>>>> Stashed changes
     public override void OnConnectedToMaster()
     {
         Debug.Log("Master Server'a bağlanıldı!");
@@ -376,4 +412,24 @@ public new void OnDisable()
         Debug.Log($"Odaya katıldı: {PhotonNetwork.CurrentRoom.Name}");
         SceneManager.LoadScene(9);
     }
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+
+    public void CloseRoomCreationPanel()
+{
+    if (roomCreationPanel != null)
+    {
+        roomCreationPanel.SetActive(false);
+        Debug.Log("Oda oluşturma paneli kapatıldı.");
+    }
+    else
+    {
+        Debug.LogWarning("roomCreationPanel atanmamış!");
+    }
+}
+
+=======
+>>>>>>> 6a036ac4ab7c1ab6d801be4818d97a4d52850e86
+>>>>>>> Stashed changes
 }
